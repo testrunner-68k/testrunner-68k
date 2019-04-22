@@ -1,0 +1,7 @@
+[package]
+name = "testrunner-68k"
+version = "0.1.0"
+authors = ["Mikael Kalms <mikael@kalms.org>"]
+edition = "2018"
+
+[dependencies]
