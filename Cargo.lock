@@ -3,7 +3,7 @@
 [[package]]
 name = "amiga_hunk_parser"
 version = "0.1.0"
-source = "git+https://github.com/emoon/amiga_hunk_parser#fe19249696ba230e6650b688691898080da8909b"
+source = "git+https://github.com/kalmalyzer/amiga_hunk_parser#8e555792df69fb113937b33203aa1afa6a8e3bff"
 dependencies = [
  "byteorder 1.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -17,9 +17,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "testrunner-68k"
 version = "0.1.0"
 dependencies = [
- "amiga_hunk_parser 0.1.0 (git+https://github.com/emoon/amiga_hunk_parser)",
+ "amiga_hunk_parser 0.1.0 (git+https://github.com/kalmalyzer/amiga_hunk_parser)",
 ]
 
 [metadata]
-"checksum amiga_hunk_parser 0.1.0 (git+https://github.com/emoon/amiga_hunk_parser)" = "<none>"
+"checksum amiga_hunk_parser 0.1.0 (git+https://github.com/kalmalyzer/amiga_hunk_parser)" = "<none>"
 "checksum byteorder 1.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "a019b10a2a7cdeb292db131fc8113e57ea2a908f6e7894b0c3c671893b65dbeb"

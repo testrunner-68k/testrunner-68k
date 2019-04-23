@@ -5,4 +5,4 @@ authors = ["Mikael Kalms <mikael@kalms.org>"]
 edition = "2018"
 
 [dependencies]
-amiga_hunk_parser = { git = "https://github.com/emoon/amiga_hunk_parser" }
+amiga_hunk_parser = { git = "https://github.com/kalmalyzer/amiga_hunk_parser" }
