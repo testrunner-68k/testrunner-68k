@@ -7,3 +7,6 @@
 
 # Tundra's state information
 /.tundra2*
+
+# Visual Studio Code's temp folder
+/.vscode
