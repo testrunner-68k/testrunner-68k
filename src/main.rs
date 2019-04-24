@@ -2,6 +2,8 @@ use std::env;
 
 use amiga_hunk_parser::{Hunk, HunkType, HunkParser};
 
+mod musashi;
+
 // Compute start address for each hunk
 fn layout_hunks(hunks: &Vec<Hunk>) -> Vec<u32> {
 

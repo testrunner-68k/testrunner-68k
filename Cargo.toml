@@ -4,5 +4,8 @@ version = "0.1.0"
 authors = ["Mikael Kalms <mikael@kalms.org>"]
 edition = "2018"
 
+[build-dependencies]
+bindgen = "0.49.0"
+
 [dependencies]
 amiga_hunk_parser = { git = "https://github.com/kalmalyzer/amiga_hunk_parser" }
