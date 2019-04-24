@@ -60,6 +60,8 @@ pub extern fn m68k_write_memory_32(address: u32, value: u32) {
 fn run_musashi() {
     unsafe {
         m68k_init();
+        m68k_set_cpu_type(M68K_CPU_TYPE_68000 as u32);
+
         m68k_write_memory_32(0, 0xf000);
         m68k_write_memory_32(4, 0x1000);
 
@@ -67,14 +69,10 @@ fn run_musashi() {
         m68k_write_memory_16(0x1002, 0x60fe);   // BRA.S *
 
         m68k_pulse_reset();
-        m68k_execute(1000); // Test failure during execution
+        m68k_execute(1024);
 
-        // // let mut context: Vec<u8> = Vec::new();
-        // // context.reserve(m68k_context_size() as usize);
-        // // m68k_get_context(&context);
-
-        // let d0 = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_D0);
-        // dbg!(&d0);
-        // //assert_eq!(5u32, d0);
+        let d0 = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_D0);
+        dbg!(&d0);
+        assert_eq!(5u32, d0);
     }
 }
