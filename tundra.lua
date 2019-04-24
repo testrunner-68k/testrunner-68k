@@ -16,7 +16,12 @@ Build {
             DefaultOnHost = "windows",
             Tools = { "msvc" },
             Env = {
-                CXXOPTS = { "/EHsc" },
+				GENERATE_PDB = "1",
+				CCOPTS = {
+					"/FS",
+					{ "/Od"; Config = "*-*-debug" },
+					{ "/O2"; Config = "*-*-release" },
+				}
             },
         },
     },
