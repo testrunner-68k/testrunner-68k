@@ -1,1 +1,9 @@
+
+# Cargo's build artefacts
 /target
+
+# Tundra's build artefacts
+/t2-output
+
+# Tundra's state information
+/.tundra2*
