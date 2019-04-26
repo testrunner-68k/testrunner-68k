@@ -11,6 +11,8 @@ mod testcases;
 
 use amigahunk::get_test_cases;
 
+use musashi::run_test_cases;
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -22,6 +24,8 @@ fn main() {
 
     let hunks = HunkParser::parse_file(&args[1]).unwrap();
 //    dbg!(&hunks);
-    let _test_cases = get_test_cases(&hunks);
+    let test_cases = get_test_cases(&hunks);
+    let test_results = run_test_cases(&hunks, &test_cases);
+    dbg!(&test_results);
 }
 

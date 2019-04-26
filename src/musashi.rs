@@ -6,6 +6,8 @@ use std::sync::Mutex;
 
 use amiga_hunk_parser::Hunk;
 
+use super::testcases::{TestCase, TestResult};
+
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
 
 lazy_static! {
@@ -75,6 +77,21 @@ pub fn layout_hunks(hunks: &Vec<Hunk>) -> Vec<u32> {
     dbg!(&layout_hunks);
 
     return layout_hunks;
+}
+
+pub fn run_test_case(_hunks: &Vec<Hunk>, _test_case: &TestCase) -> TestResult {
+    TestResult { name: "hello".to_string(), success: true }
+}
+
+pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<TestResult> {
+
+    let test_results: Vec<TestResult> = Vec::new();
+
+    for test_case in test_cases {
+        test_results.push(run_test_case(&hunks, &test_case));
+    }
+
+    test_results
 }
 
 #[test]
