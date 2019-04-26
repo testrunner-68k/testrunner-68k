@@ -4,6 +4,8 @@
 use std::ptr;
 use std::sync::Mutex;
 
+use amiga_hunk_parser::Hunk;
+
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
 
 lazy_static! {
@@ -54,6 +56,25 @@ pub extern fn m68k_write_memory_32(address: u32, value: u32) {
     write_memory_byte(address + 1, value >> 16);
     write_memory_byte(address + 2, value >> 8);
     write_memory_byte(address + 3, value);
+}
+
+// Compute start address for each hunk
+pub fn layout_hunks(hunks: &Vec<Hunk>) -> Vec<u32> {
+
+    let mut layout_hunks = Vec::new();
+
+    let mut start_address = 0u32;
+
+    for hunk_index in 0..hunks.len() {
+
+        let hunk = &hunks[hunk_index];
+        layout_hunks.push(start_address);
+        start_address = ((start_address + (hunk.alloc_size as u32)) + 3) & 0xfffffffc;
+    }
+
+    dbg!(&layout_hunks);
+
+    return layout_hunks;
 }
 
 #[test]

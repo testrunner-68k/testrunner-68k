@@ -9,7 +9,7 @@ mod amigahunk;
 mod musashi;
 mod testcases;
 
-use amigahunk::{layout_hunks, get_test_cases};
+use amigahunk::get_test_cases;
 
 
 fn main() {
@@ -22,7 +22,6 @@ fn main() {
 
     let hunks = HunkParser::parse_file(&args[1]).unwrap();
 //    dbg!(&hunks);
-    let hunk_layout = layout_hunks(&hunks);
-    let test_cases = get_test_cases(&hunks, &hunk_layout);
+    let _test_cases = get_test_cases(&hunks);
 }
 
