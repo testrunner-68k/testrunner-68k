@@ -24,6 +24,11 @@ fn pretty_print_results(test_results: &Vec<TestResult>) {
     println!("{} of {} tests passed", success_count, total_count);
 }
 
+fn successful(test_results: &Vec<TestResult>) -> bool {
+    let first_failed_test_result = test_results.iter().find(|test_result| test_result.success == false);
+    first_failed_test_result.is_none()
+}
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -37,5 +42,7 @@ fn main() {
     let test_cases = get_test_cases(&hunks);
     let test_results = run_test_cases(&hunks, &test_cases);
     pretty_print_results(&test_results);
+
+    std::process::exit( if successful(&test_results) { 0 } else { 1 });
 }
 
