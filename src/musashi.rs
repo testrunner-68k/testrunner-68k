@@ -4,9 +4,11 @@
 use std::ptr;
 use std::sync::Mutex;
 
-use amiga_hunk_parser::Hunk;
+use amiga_hunk_parser::{Hunk, HunkParser};
 
 use super::testcases::{TestCase, TestResult};
+
+use serial_test_derive::serial;
 
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
 
@@ -133,8 +135,9 @@ fn get_function_start_address(hunks: &Vec<Hunk>, hunk_layout: &Vec<u32>, test_ca
 }
 
 fn setup_emulator_init_and_trampoline(stack_ptr: u32, program_done_ptr: u32, test_function_start: u32) {
+    write_memory_16(program_done_ptr, 0x60fe);           // BRA.S *
     write_memory_32(stack_ptr, program_done_ptr);
-    write_memory_32(0, stack_ptr - 4);
+    write_memory_32(0, stack_ptr);
     write_memory_32(4, test_function_start);
 }
 
@@ -152,7 +155,10 @@ fn clear_emulator_test_result() {
 }
 
 fn get_emulator_test_result(test_case_name: &String) -> TestResult {
-    TestResult { name: test_case_name.clone(), success: true }
+    unsafe {
+        let d0 = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_D0);
+        TestResult { name: test_case_name.clone(), success: d0 != 0 }
+    }
 }
 
 pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> TestResult {
@@ -163,8 +169,8 @@ pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> TestResult {
     let memory_area_start = 1024u32;
     let _memory_area_end = memory_size - stack_size;
 
-    let stack_ptr = memory_size;
-    let program_done_ptr = stack_ptr - 4;
+    let program_done_ptr = memory_size - 16;
+    let stack_ptr = program_done_ptr - 4;
 
     let hunk_layout = layout_hunks(&hunks, memory_area_start);
 
@@ -189,6 +195,7 @@ pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<Test
 }
 
 #[test]
+#[serial]
 fn run_musashi() {
     unsafe {
         m68k_init();
@@ -199,7 +206,6 @@ fn run_musashi() {
 
         m68k_write_memory_16(0x1000, 0x7005);   // MOVEQ #5,d0
         m68k_write_memory_16(0x1002, 0x60fe);   // BRA.S *
-
         m68k_pulse_reset();
         m68k_execute(1024);
 
@@ -207,4 +213,22 @@ fn run_musashi() {
         dbg!(&d0);
         assert_eq!(5u32, d0);
     }
+}
+
+#[test]
+#[serial]
+fn run_successful_test() {
+    let hunks = HunkParser::parse_file("testdata/test.successful_test_case.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_successfulCase".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(true, test_result.success)
+}
+
+#[test]
+#[serial]
+fn run_failed_test() {
+    let hunks = HunkParser::parse_file("testdata/test.failed_test_case.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_failedCase".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(false, test_result.success)
 }
