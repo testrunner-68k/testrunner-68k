@@ -92,8 +92,6 @@ pub fn layout_hunks(hunks: &Vec<Hunk>, start_address: u32) -> Vec<u32> {
         hunk_start_address = ((hunk_start_address + (hunk.alloc_size as u32)) + 3) & 0xfffffffc;
     }
 
-    dbg!(&layout_hunks);
-
     return layout_hunks;
 }
 
@@ -210,7 +208,6 @@ fn run_musashi() {
         m68k_execute(1024);
 
         let d0 = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_D0);
-        dbg!(&d0);
         assert_eq!(5u32, d0);
     }
 }

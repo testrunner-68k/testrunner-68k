@@ -13,6 +13,14 @@ use amigahunk::get_test_cases;
 
 use musashi::run_test_cases;
 
+use testcases::TestResult;
+
+fn pretty_print_results(test_results: &Vec<TestResult>) {
+    for test_result in test_results {
+        println!("{}: {}", test_result.name, test_result.success);
+    }
+}
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -23,9 +31,8 @@ fn main() {
     }
 
     let hunks = HunkParser::parse_file(&args[1]).unwrap();
-//    dbg!(&hunks);
     let test_cases = get_test_cases(&hunks);
     let test_results = run_test_cases(&hunks, &test_cases);
-    dbg!(&test_results);
+    pretty_print_results(&test_results);
 }
 
