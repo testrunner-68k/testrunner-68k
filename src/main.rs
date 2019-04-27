@@ -19,6 +19,9 @@ fn pretty_print_results(test_results: &Vec<TestResult>) {
     for test_result in test_results {
         println!("{}: {}", test_result.name, test_result.success);
     }
+    let success_count: isize = test_results.iter().map(|test_result| test_result.success as isize).sum();
+    let total_count = test_results.len();
+    println!("{} of {} tests passed", success_count, total_count);
 }
 
 
