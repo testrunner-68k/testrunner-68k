@@ -10,6 +10,13 @@ Build {
             Name = "linux-gcc",
             DefaultOnHost = "linux",
             Tools = { "gcc" },
+            Env = {
+				CCOPTS = {
+					"-fPIC",
+                    { "-O0", "-g"; Config = "*-*-debug" },
+                    { "-O3"; Config = "*-*-release" },
+                }
+            },
         },
         {
             Name = "win32-msvc",

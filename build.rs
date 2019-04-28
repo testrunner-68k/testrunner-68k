@@ -10,8 +10,20 @@ fn path_relative_to_cargo_manifest_dir(path: &String) -> String {
 }
 
 fn musashi_lib() -> (String, String) {
-    let folder = if cfg!(debug_assertions) { "win32-msvc-debug-default" } else { "win32-msvc-release-default" };
-    (path_relative_to_cargo_manifest_dir(&format!("t2-output/{}", folder)), "musashi".to_string())
+
+    let target_os = env::var("CARGO_CFG_TARGET_OS");
+
+    let profile = if cfg!(debug_assertions) { "debug" } else { "release" };
+
+    let platform_toolset = match target_os.as_ref().map(|x| &**x) {
+        Ok("windows") => "win32-msvc",
+        Ok("linux") => "linux-gcc",
+        Ok(target_os_string) => panic!("Unsupported target OS: {}", target_os_string),
+        Err(_) => panic!()
+    };
+
+    let folder = format!("t2-output/{}-{}-default", platform_toolset, profile);
+    (path_relative_to_cargo_manifest_dir(&folder), "musashi".to_string())
 }
 
 fn main() {
