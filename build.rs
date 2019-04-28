@@ -4,10 +4,26 @@ use std::env;
 use std::env::var;
 use std::path::PathBuf;
 
-fn main() {
+fn path_relative_to_cargo_manifest_dir(path: &str) -> String {
     let manifest_dir = var("CARGO_MANIFEST_DIR").unwrap();
-    println!("cargo:rustc-link-search={}/t2-output/win32-msvc-debug-default", manifest_dir);
-    println!("cargo:rustc-link-lib=musashi");
+    format!("{}/{}", manifest_dir, path)
+}
+
+#[cfg(not(debug_assertions))]
+fn musashi_lib() -> (String, String) {
+    (path_relative_to_cargo_manifest_dir("t2-output/win32-msvc-release-default"), "musashi".to_string())
+}
+
+#[cfg(debug_assertions)]
+fn musashi_lib() -> (String, String) {
+    (path_relative_to_cargo_manifest_dir("t2-output/win32-msvc-debug-default"), "musashi".to_string())
+}
+
+
+fn main() {
+    let (musashi_dir, musashi_name) = musashi_lib();
+    println!("cargo:rustc-link-search={}", musashi_dir);
+    println!("cargo:rustc-link-lib={}", musashi_name);
 
     let bindings = bindgen::Builder::default()
         .header("musashi/m68k.h")
