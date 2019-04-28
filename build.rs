@@ -4,21 +4,15 @@ use std::env;
 use std::env::var;
 use std::path::PathBuf;
 
-fn path_relative_to_cargo_manifest_dir(path: &str) -> String {
+fn path_relative_to_cargo_manifest_dir(path: &String) -> String {
     let manifest_dir = var("CARGO_MANIFEST_DIR").unwrap();
     format!("{}/{}", manifest_dir, path)
 }
 
-#[cfg(not(debug_assertions))]
 fn musashi_lib() -> (String, String) {
-    (path_relative_to_cargo_manifest_dir("t2-output/win32-msvc-release-default"), "musashi".to_string())
+    let folder = if cfg!(debug_assertions) { "win32-msvc-debug-default" } else { "win32-msvc-release-default" };
+    (path_relative_to_cargo_manifest_dir(&format!("t2-output/{}", folder)), "musashi".to_string())
 }
-
-#[cfg(debug_assertions)]
-fn musashi_lib() -> (String, String) {
-    (path_relative_to_cargo_manifest_dir("t2-output/win32-msvc-debug-default"), "musashi".to_string())
-}
-
 
 fn main() {
     let (musashi_dir, musashi_name) = musashi_lib();
