@@ -31,7 +31,7 @@ matrix:
     script:
     # Fetch Tundra installer, run installer
     - wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe
-    - Tundra-Setup.exe /S
+    - ./Tundra-Setup.exe /S
 
     # Build Musashi
     - tundra2
