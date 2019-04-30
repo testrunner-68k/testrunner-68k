@@ -22,5 +22,23 @@ matrix:
     # Build Musashi
     - tundra2
 
-    # Build testrunner-68k
+    # Run testrunner-68k tests
+    - cargo test
+
+  include:
+  - <<: *common
+    os: windows
+
+    script:
+    # Build Tundra from source & install
+    - git clone --recursive https://github.com/deplinenoise/tundra.git
+    - cd tundra
+    - make
+    - sudo make install
+    - cd ..
+
+    # Build Musashi
+    - tundra2
+
+    # Run testrunner-68k tests
     - cargo test
