@@ -25,7 +25,6 @@ matrix:
     # Run testrunner-68k tests
     - cargo test
 
-  include:
   - <<: *common
     os: windows
 
