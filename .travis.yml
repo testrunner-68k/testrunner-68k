@@ -65,9 +65,10 @@ matrix:
     name: Deploy
     stage: deploy
 
+    if: ${TRAVIS_TAG::8} == 'release-'
 
     script:
-    - zip -r testrunner-68k-source.zip . -x testrunner-68k-source.zip
+    - zip -r testrunner-68k-source.zip . -x testrunner-68k-source.zip -x .git
 
     deploy:
       provider: releases
@@ -78,4 +79,3 @@ matrix:
 
       on:
         tags: true
-        condition: ${TRAVIS_TAG::8} == 'release-'
