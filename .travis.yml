@@ -3,7 +3,7 @@ __common: &common
   # language: rust
   # rust: stable
   # cache: cargo
-  language: c
+  language: cpp
 
 matrix:
 
