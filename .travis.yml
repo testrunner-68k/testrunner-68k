@@ -30,15 +30,17 @@ matrix:
     os: windows
 
     before_install:
+    # Fetch Tundra installer
     - cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
-    - cmd.exe /C 'echo %path%'
+    # Run Tundra installer
     - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
-    - cmd.exe /C 'echo %path%'
+    # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
+    - path %path%;%programfiles%\Tundra 2.0\bin
+    - echo %path%
 
     script:
-    # Fetch Tundra installer, run installer
     #- cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
-    - cmd.exe /C 'echo %path%'
+    #- cmd.exe /C 'echo %path%'
     #- cmd.exe /C 'start /wait Tundra-Setup.exe /S'
     #- cmd.exe /C 'echo %path%'
 
