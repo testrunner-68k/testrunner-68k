@@ -1,16 +1,23 @@
 
-__common: &common
-  language: rust
-  rust: stable
-  cache: cargo
-  #language: cpp
+__common: &common_build
+  # language: rust
+  # rust: stable
+  # cache: cargo
+  language: cpp
+
+stages:
+  - build
+  - deploy
 
 matrix:
 
   include:
-  - <<: *common
+  - <<: *common_build
     os: linux
     dist: xenial
+
+    name: Linux build
+    stage: build
 
     before_install:
     # Build Tundra from source & install
@@ -26,10 +33,13 @@ matrix:
     - tundra2
 
     # Run testrunner-68k tests
-    - cargo test
+#    - cargo test
 
-  - <<: *common
+  - <<: *common_build
     os: windows
+
+    name: Windows build
+    stage: build
 
     before_install:
     # Fetch Tundra installer
@@ -46,4 +56,12 @@ matrix:
     - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2'
 
     # Run testrunner-68k tests
-    - cargo test
+#    - cargo test
+
+  - language: shell
+
+    name: Deploy
+    stage: deploy
+
+    script:
+    - echo 'Deploy performed'
