@@ -35,9 +35,10 @@ matrix:
     # Run Tundra installer
     - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
     # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
-    - echo "\$PATH"
+    - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
     - echo $PATH
     - echo "\%PATH\%"
+    - cmd.exe /C 'echo %PATH%'
     - echo %path%
 
     script:
