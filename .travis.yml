@@ -37,16 +37,11 @@ matrix:
     # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
     - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
 
-    # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-    - '"/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Auxiliary/Build/vcvarsall.bat" amd64 && cl.exe'
-    - choco install visualstudio2017-workload-vctools -y
-
     script:
 
-    - cl.exe
-
-    # Build Musashi
-    - tundra2
+    # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
+    # Then, build Musashi
+    - cmd.exe /C "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2'
 
     # Run testrunner-68k tests
     - cargo test
