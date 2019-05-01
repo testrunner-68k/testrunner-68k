@@ -68,7 +68,7 @@ matrix:
     if: tag =~ /^release-/
 
     script:
-    - zip -r testrunner-68k-source.zip . -x testrunner-68k-source.zip -x .git
+    - zip -r testrunner-68k-source.zip . -x testrunner-68k-source.zip .git/*
 
     deploy:
       provider: releases
