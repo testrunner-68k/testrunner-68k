@@ -38,8 +38,8 @@ matrix:
     - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
 
     # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-    # - cl.exe
-    - '"/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Auxiliary/Build/vcvarsall.bat" amd64'
+    #- '"/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Auxiliary/Build/vcvarsall.bat" amd64'
+    - choco install visualstudio2017-workload-vctools -y
     - cl.exe
 
     script:
