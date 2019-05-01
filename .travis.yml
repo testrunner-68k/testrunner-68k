@@ -28,12 +28,12 @@ matrix:
 
   - <<: *common
     os: windows
+
+    before_install:
     - cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
     - cmd.exe /C 'echo %path%'
     - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
     - cmd.exe /C 'echo %path%'
-
-    before_install:
 
     script:
     # Fetch Tundra installer, run installer
