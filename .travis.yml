@@ -3,6 +3,7 @@ __common: &common
   # language: rust
   # rust: stable
   # cache: cargo
+  language: generic
 
 matrix:
 
