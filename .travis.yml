@@ -59,9 +59,23 @@ matrix:
 #    - cargo test
 
   - language: shell
+    os: linux
+    dist: xenial
 
     name: Deploy
     stage: deploy
 
+
     script:
-    - echo 'Deploy performed'
+    - zip -r testrunner-68k-source.zip . -x testrunner-68k-source.zip
+
+    deploy:
+      provider: releases
+      api_key:
+        secure: TODO
+      file:
+        - testrunner-68k-source.zip
+
+      on:
+        tags: true
+        condition: ${TRAVIS_TAG::8} == 'release-'
