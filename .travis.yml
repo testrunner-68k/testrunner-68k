@@ -70,12 +70,12 @@ matrix:
     script:
     - zip -r testrunner-68k-source.zip . -x testrunner-68k-source.zip "target/*" ".git/*" "t2-output/*" ".tundra2.*"
 
-    # deploy:
-    #   provider: releases
-    #   api_key:
-    #     secure: "Fvc5rfm0jge+6Z57IWZduMlUFYbKE1J35xsdRfNmsNRN7sTLsNw21KUfc0hdfEBUNXtj2EWdOORo+JMuFiz+8LtTgEc5AHa+mwc9h8voD72ri5N1XcITT5ac4Mo4iC3lW5jKHT3xW47NiY6Yw0K387sDZj6ccBTvjin1Q73QvrKM/RjoHF+FWIL/FGp39CyPC105EO2WcSZDHKcP01viSVtoBItXerWsar7bThYkTvR15glyBQiqpupkpniN075DymQtBKEDW8xDolMdihQBJXDLVDobEqOeAZmRJ/hiNb1KguUCYlJje4JeDP8TKjqQH/sg8uwI7mrbeBKBt4QOOWN+XvMnOe4GsKGbS3AHY3QTzJXaZ877/ChJqx1cfBNcWNw7ppCKaZqlkn1m2OSN5NXy8Hm5nt7fFR9KnxayEUu8uVx0kTTNWe72I4NnNBvCOExPtFJL5SD03uhOtc/cdFYAOEmP6sq79LY+tf3UF7QB4PwBcZpEW6FR3i/RFzmF3djpmxlrJfIsXa9o9XTUFhetlZZq2ezxmUvh5Lx9W781BGcY6r+Re2pzR4RZ7cZWE4c7jFyCLoXlZ8o5BYtfb5VM6HF6/0IS0b6oRvExGr3IRjlpvFXNJxqaNxvkfivwsouJqLI0UwaRydqO2lShIz6EoP7c2MsM/t9TdYj0w+E="
-    #   file:
-    #     - testrunner-68k-source.zip
+    deploy:
+      provider: releases
+      api_key:
+        secure: "Ggu3Un+OdejVPc1mcyatJG3jduwpsSXOlohI3pknXHftLUr8jyhNiVtopuxOmDo2uAbshgkOXDQAQFSF7aPA3p62hhum2wd0h6ayic23u75FXBYfjky3B5xtcbFGOTO4pK8m0qMYCgbaSBj4U8uUz2gGh7qQFN77+8yRmzpr+3WkRfu2UyeJjjGCizDu8l7hSwsajxoRqV8mQ9kskkbk76vkhWeUAYPmEtZhdy+NM2lhWSy9PR0LOwoiM5egLF4ECEsYcjp2ewKx4fG7hePU/7A5lFV2UVcT8Si27u4QCPbjNCULgYjsEuqcGsREW6Ta5+trM+F9OVUdLymsgOsGItmIjILv7CxOuKWxLGcHtpHnjImUfLH620Cno7CBWm/FuWjuRghwV+8cMaufWXFj484FPNpsvKShNklZyPtxDOuvwwaOXfeGGcr5yhKQsCt2l9tSV+hhPM84pslgccY8ORhcrRbaNME2S/igdsLODzO06tcRPVC9wyoc6wc8nCktx8V6EKfhsNoAuCiM7V6o3WCcOWraIxg7PQeZvXU8LdsuoKzfyi8YA7gXI/6wjU1wb/RGujOtwVelQDAi0X8/JuXIU2yQdpEk7FsvH3MtvS5JGtG9c2iFO9vASodsytvnSy5rQ3WTWCb065HuqYqjtpPNWn2PefdvEXiciiLlvfs="
+      file:
+        - testrunner-68k-source.zip
 
-    #   on:
-    #     tags: true
+      on:
+        tags: true
