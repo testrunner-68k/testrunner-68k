@@ -12,51 +12,51 @@ stages:
 matrix:
 
   include:
-  - <<: *common_build
-    os: linux
-    dist: xenial
+#   - <<: *common_build
+#     os: linux
+#     dist: xenial
 
-    name: Linux build
-    stage: build
+#     name: Linux build
+#     stage: build
 
-    before_install:
-    # Build Tundra from source & install
-    - git clone --recursive https://github.com/deplinenoise/tundra.git
-    - cd tundra
-    - make
-    - sudo make install
-    - cd ..
+#     before_install:
+#     # Build Tundra from source & install
+#     - git clone --recursive https://github.com/deplinenoise/tundra.git
+#     - cd tundra
+#     - make
+#     - sudo make install
+#     - cd ..
 
-    script:
+#     script:
 
-    # Build Musashi
-    - tundra2
+#     # Build Musashi
+#     - tundra2
 
-    # Run testrunner-68k tests
-#    - cargo test
+#     # Run testrunner-68k tests
+# #    - cargo test
 
-  - <<: *common_build
-    os: windows
+#   - <<: *common_build
+#     os: windows
 
-    name: Windows build
-    stage: build
+#     name: Windows build
+#     stage: build
 
-    before_install:
-    # Fetch Tundra installer
-    - cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
-    # Run Tundra installer
-    - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
-    # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
-    - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
+#     before_install:
+#     # Fetch Tundra installer
+#     - cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
+#     # Run Tundra installer
+#     - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
+#     # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
+#     - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
 
-    script:
+#     script:
 
-    # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-    # Then, build Musashi
-    - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2'
+#     # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
+#     # Then, build Musashi
+#     - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2'
 
-    # Run testrunner-68k tests
-#    - cargo test
+#     # Run testrunner-68k tests
+# #    - cargo test
 
   - language: shell
     os: linux
