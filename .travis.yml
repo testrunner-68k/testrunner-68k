@@ -69,6 +69,8 @@ matrix:
 
     script:
     - echo hello
+    - echo ${TRAVIS_TAG:8}
+    - echo ${TRAVIS_TAG::8}
 
     deploy:
       provider: releases
