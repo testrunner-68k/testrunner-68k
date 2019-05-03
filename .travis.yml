@@ -12,12 +12,15 @@ stages:
 matrix:
 
   include:
-    - <<: *common_build
+
+    ############ Linux build ############################
+
+    - name: Linux build
+      stage: build
+
+      <<: *common_build
       os: linux
       dist: xenial
-
-      name: Linux build
-      stage: build
 
       before_install:
         # Build Tundra from source & install
@@ -53,11 +56,13 @@ matrix:
       #   bucket: testrunner-68k-artifacts
       #   local-dir: deploy
 
-    - <<: *common_build
-      os: windows
+    ############ Windows build ############################
 
-      name: Windows build
+    - name: Windows build
       stage: build
+
+      <<: *common_build
+      os: windows
 
       before_install:
         # Fetch Tundra installer
@@ -96,12 +101,14 @@ matrix:
         bucket: testrunner-68k-artifacts
         local-dir: deploy
 
-    - language: shell
+    ############ Release ############################
+
+    - name: Release
+      stage: release
+
+      language: shell
       os: linux
       dist: xenial
-
-      name: Release
-      stage: release
 
       if: (tag =~ /^release-/)
 
