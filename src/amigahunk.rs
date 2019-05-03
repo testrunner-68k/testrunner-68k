@@ -1,5 +1,5 @@
 
-use amiga_hunk_parser::{Hunk, HunkType, HunkParser};
+use amiga_hunk_parser::{Hunk, HunkType};
 
 use super::testcases::TestCase;
 
@@ -28,6 +28,9 @@ pub fn get_test_cases(hunks: &Vec<Hunk>) -> Vec<TestCase> {
     }
     return test_cases;
 }
+
+#[test]
+use amiga_hunk_parser::HunkParser;
 
 #[test]
 fn test_cases_enumerate_successfully() {
