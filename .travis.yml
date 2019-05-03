@@ -67,21 +67,21 @@ matrix:
         # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
         - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
 
-    script:
+      script:
 
-      # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-      # Then, build Musashi
-      - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2'
+        # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
+        # Then, build Musashi
+        - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2'
 
-      # Run testrunner-68k tests
-      - cargo test
+        # Run testrunner-68k tests
+        - cargo test
 
-      # Build testrunner-68k executable in release config
-      - cargo build --release
+        # Build testrunner-68k executable in release config
+        - cargo build --release
 
-      # Include testrunner-68k executable with deploy
-      - mkdir deploy
-      - cp target/release/testrunner-68k.exe deploy
+        # Include testrunner-68k executable with deploy
+        - mkdir deploy
+        - cp target/release/testrunner-68k.exe deploy
 
       deploy:
         skip_cleanup: true
