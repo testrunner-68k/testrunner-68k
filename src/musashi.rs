@@ -190,8 +190,11 @@ pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<Test
     test_results
 }
 
-#[test]
+#[cfg(test)]
 use serial_test_derive::serial;
+
+#[cfg(test)]
+use amiga_hunk_parser::HunkParser;
 
 #[test]
 #[serial]
@@ -212,9 +215,6 @@ fn run_musashi() {
         assert_eq!(5u32, d0);
     }
 }
-
-#[test]
-use amiga_hunk_parser::HunkParser;
 
 #[test]
 #[serial]

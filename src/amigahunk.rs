@@ -29,7 +29,7 @@ pub fn get_test_cases(hunks: &Vec<Hunk>) -> Vec<TestCase> {
     return test_cases;
 }
 
-#[test]
+#[cfg(test)]
 use amiga_hunk_parser::HunkParser;
 
 #[test]
