@@ -1,5 +1,5 @@
 
-# Test runner for Amiga/680x0 code ![Build status](https://travis-ci.com/Kalmalyzer/testrunner-68k.svg?branch=master)
+# Test runner for Amiga/680x0 code [![Build Status](https://travis-ci.com/Kalmalyzer/testrunner-68k.svg?branch=master)](https://travis-ci.com/Kalmalyzer/testrunner-68k)
 
 ## HOW TO USE
 
