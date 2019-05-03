@@ -54,6 +54,7 @@ matrix:
 
 #   - <<: *common_build
     os: windows
+    language: shell
 
     name: Windows build
     stage: build
