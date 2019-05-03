@@ -12,89 +12,89 @@ stages:
 matrix:
 
   include:
-    # - <<: *common_build
-    #   os: linux
-    #   dist: xenial
+    - <<: *common_build
+      os: linux
+      dist: xenial
 
-    #   name: Linux build
-    #   stage: build
+      name: Linux build
+      stage: build
 
-    #   before_install:
-    #     # Build Tundra from source & install
-    #     - git clone --recursive https://github.com/deplinenoise/tundra.git
-    #     - cd tundra
-    #     - make
-    #     - sudo make install
-    #     - cd ..
+      before_install:
+        # Build Tundra from source & install
+        - git clone --recursive https://github.com/deplinenoise/tundra.git
+        - cd tundra
+        - make
+        - sudo make install
+        - cd ..
 
-    #   script:
+      script:
 
-    #     # Build Musashi
-    #     - tundra2 linux-gcc-debug-default linux-gcc-release-default
+        # Build Musashi
+        - tundra2 linux-gcc-debug-default linux-gcc-release-default
 
-    #     # Run testrunner-68k tests
-    #     - cargo test
+        # Run testrunner-68k tests
+        - cargo test
 
-    #   ### Placeholder deploy script ###
-    #   # script:
-    #   # - mkdir deploy
-    #   # - echo "hello" > deploy/file2.txt
+      ### Placeholder deploy script ###
+      # script:
+      # - mkdir deploy
+      # - echo "hello" > deploy/file2.txt
 
-    #   # deploy:
-    #   #   skip_cleanup: true
+      # deploy:
+      #   skip_cleanup: true
 
-    #   #   on:
-    #   #     all_branches: true
+      #   on:
+      #     all_branches: true
 
-    #   #   provider: gcs
-    #   #   access_key_id: GOOGFQGMVO2253Z7JKRE4A7F
-    #   #   secret_access_key:
-    #   #     secure: bc2efA16UqUVjL7VrvTn1hnNn+ProzTrRRUH1f24xbB6Le2h4OvB4Jt+cFr+QCtpqqzKbSFbkW0G3qHOOkRaqK9fPUwugKOaFcz/dlchalN5R2ajt6Be5Z8NiXp/Skb6PKSdMhAHnAjEvpXbjAcYxxOTswLZqljSIvXJqTIOKaJQHMxnzW8o6edc9tNdiqFeIlgsQzaojOV/RmoTWBcvfUUvhfT+zUJyQVty1l9GJacYAh8+85+UrRa/6XrpcIm8iuh87sOiGaoeZw14gp/0KjAW9hAzEClhH5OEzzaTyccUYeD+pTbjh2ste15hYbx3+Y98kmRfxuuvS/xNLfaD5bT3zguLWzIUiTkNqjv9pFU4tsl/Yfe8wcewIPzGxsSsvINTWnEETg7L71cWcfnj/Z3dvAeMwbqGZ7XQdIbYyMy0N7nsoHF3hxZTk9oCujlcq1rW55AaDNev7qCy1bMX0+jn8OGelaRCppcyjxS7oAd/ixCLfAAJHWT4ZYSLh5x2WvpgSzPL2RN+dNRYDXDmECF05vd8FpD3FdVQaNA6c/rTS+0Og/uLqhsDaA3sDRX1PDVFfYLcrGeD2GFcllh8aMTa55oQbuwhVDWOt8O8KZrMqWhoGurxULI2MaMK3d4thyfn9oSL6drNjSQi+MiMedr+0Gq4FGgfm179zOCIIYE=
-    #   #   bucket: testrunner-68k-artifacts
-    #   #   local-dir: deploy
+      #   provider: gcs
+      #   access_key_id: GOOGFQGMVO2253Z7JKRE4A7F
+      #   secret_access_key:
+      #     secure: bc2efA16UqUVjL7VrvTn1hnNn+ProzTrRRUH1f24xbB6Le2h4OvB4Jt+cFr+QCtpqqzKbSFbkW0G3qHOOkRaqK9fPUwugKOaFcz/dlchalN5R2ajt6Be5Z8NiXp/Skb6PKSdMhAHnAjEvpXbjAcYxxOTswLZqljSIvXJqTIOKaJQHMxnzW8o6edc9tNdiqFeIlgsQzaojOV/RmoTWBcvfUUvhfT+zUJyQVty1l9GJacYAh8+85+UrRa/6XrpcIm8iuh87sOiGaoeZw14gp/0KjAW9hAzEClhH5OEzzaTyccUYeD+pTbjh2ste15hYbx3+Y98kmRfxuuvS/xNLfaD5bT3zguLWzIUiTkNqjv9pFU4tsl/Yfe8wcewIPzGxsSsvINTWnEETg7L71cWcfnj/Z3dvAeMwbqGZ7XQdIbYyMy0N7nsoHF3hxZTk9oCujlcq1rW55AaDNev7qCy1bMX0+jn8OGelaRCppcyjxS7oAd/ixCLfAAJHWT4ZYSLh5x2WvpgSzPL2RN+dNRYDXDmECF05vd8FpD3FdVQaNA6c/rTS+0Og/uLqhsDaA3sDRX1PDVFfYLcrGeD2GFcllh8aMTa55oQbuwhVDWOt8O8KZrMqWhoGurxULI2MaMK3d4thyfn9oSL6drNjSQi+MiMedr+0Gq4FGgfm179zOCIIYE=
+      #   bucket: testrunner-68k-artifacts
+      #   local-dir: deploy
 
-    # - <<: *common_build
-    #   os: windows
+    - <<: *common_build
+      os: windows
 
-    #   name: Windows build
-    #   stage: build
+      name: Windows build
+      stage: build
 
-    #   before_install:
-    #     # Fetch Tundra installer
-    #     - cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
-    #     # Run Tundra installer
-    #     - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
-    #     # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
-    #     - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
+      before_install:
+        # Fetch Tundra installer
+        - cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
+        # Run Tundra installer
+        - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
+        # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
+        - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
 
-    #   script:
+      script:
 
-    #     # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-    #     # Then, build Musashi
-    #     - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2 win32-msvc-debug-default win32-msvc-release-default'
+        # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
+        # Then, build Musashi
+        - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2 win32-msvc-debug-default win32-msvc-release-default'
 
-    #     # Run testrunner-68k tests
-    #     - cargo test
+        # Run testrunner-68k tests
+        - cargo test
 
-    #     # Build testrunner-68k executable in release config
-    #     - cargo build --release
+        # Build testrunner-68k executable in release config
+        - cargo build --release
 
-    #     # Include testrunner-68k executable with deploy
-    #     - mkdir deploy
-    #     - cp target/release/testrunner-68k.exe deploy
+        # Include testrunner-68k executable with deploy
+        - mkdir deploy
+        - cp target/release/testrunner-68k.exe deploy
 
-    #   deploy:
-    #     skip_cleanup: true
+      deploy:
+        skip_cleanup: true
 
-    #     on:
-    #       all_branches: true
+        on:
+          all_branches: true
 
-    #     provider: gcs
-    #     access_key_id: GOOGFQGMVO2253Z7JKRE4A7F
-    #     secret_access_key:
-    #       secure: bc2efA16UqUVjL7VrvTn1hnNn+ProzTrRRUH1f24xbB6Le2h4OvB4Jt+cFr+QCtpqqzKbSFbkW0G3qHOOkRaqK9fPUwugKOaFcz/dlchalN5R2ajt6Be5Z8NiXp/Skb6PKSdMhAHnAjEvpXbjAcYxxOTswLZqljSIvXJqTIOKaJQHMxnzW8o6edc9tNdiqFeIlgsQzaojOV/RmoTWBcvfUUvhfT+zUJyQVty1l9GJacYAh8+85+UrRa/6XrpcIm8iuh87sOiGaoeZw14gp/0KjAW9hAzEClhH5OEzzaTyccUYeD+pTbjh2ste15hYbx3+Y98kmRfxuuvS/xNLfaD5bT3zguLWzIUiTkNqjv9pFU4tsl/Yfe8wcewIPzGxsSsvINTWnEETg7L71cWcfnj/Z3dvAeMwbqGZ7XQdIbYyMy0N7nsoHF3hxZTk9oCujlcq1rW55AaDNev7qCy1bMX0+jn8OGelaRCppcyjxS7oAd/ixCLfAAJHWT4ZYSLh5x2WvpgSzPL2RN+dNRYDXDmECF05vd8FpD3FdVQaNA6c/rTS+0Og/uLqhsDaA3sDRX1PDVFfYLcrGeD2GFcllh8aMTa55oQbuwhVDWOt8O8KZrMqWhoGurxULI2MaMK3d4thyfn9oSL6drNjSQi+MiMedr+0Gq4FGgfm179zOCIIYE=
-    #     bucket: testrunner-68k-artifacts
-    #     local-dir: deploy
+        provider: gcs
+        access_key_id: GOOGFQGMVO2253Z7JKRE4A7F
+        secret_access_key:
+          secure: bc2efA16UqUVjL7VrvTn1hnNn+ProzTrRRUH1f24xbB6Le2h4OvB4Jt+cFr+QCtpqqzKbSFbkW0G3qHOOkRaqK9fPUwugKOaFcz/dlchalN5R2ajt6Be5Z8NiXp/Skb6PKSdMhAHnAjEvpXbjAcYxxOTswLZqljSIvXJqTIOKaJQHMxnzW8o6edc9tNdiqFeIlgsQzaojOV/RmoTWBcvfUUvhfT+zUJyQVty1l9GJacYAh8+85+UrRa/6XrpcIm8iuh87sOiGaoeZw14gp/0KjAW9hAzEClhH5OEzzaTyccUYeD+pTbjh2ste15hYbx3+Y98kmRfxuuvS/xNLfaD5bT3zguLWzIUiTkNqjv9pFU4tsl/Yfe8wcewIPzGxsSsvINTWnEETg7L71cWcfnj/Z3dvAeMwbqGZ7XQdIbYyMy0N7nsoHF3hxZTk9oCujlcq1rW55AaDNev7qCy1bMX0+jn8OGelaRCppcyjxS7oAd/ixCLfAAJHWT4ZYSLh5x2WvpgSzPL2RN+dNRYDXDmECF05vd8FpD3FdVQaNA6c/rTS+0Og/uLqhsDaA3sDRX1PDVFfYLcrGeD2GFcllh8aMTa55oQbuwhVDWOt8O8KZrMqWhoGurxULI2MaMK3d4thyfn9oSL6drNjSQi+MiMedr+0Gq4FGgfm179zOCIIYE=
+        bucket: testrunner-68k-artifacts
+        local-dir: deploy
 
     - language: shell
       os: linux
