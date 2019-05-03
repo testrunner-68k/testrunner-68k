@@ -7,7 +7,7 @@ __common: &common_build
 
 stages:
   - build
-  - deploy
+  - release
 
 matrix:
 
@@ -100,8 +100,8 @@ matrix:
       os: linux
       dist: xenial
 
-      name: Deploy
-      stage: deploy
+      name: Release
+      stage: release
 
       if: (tag =~ /^release-/)
 
