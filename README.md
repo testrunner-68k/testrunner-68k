@@ -1,18 +1,11 @@
 
+# Test runner for Amiga/680x0 code ![Build status](https://travis-ci.com/Kalmalyzer/testrunner-68k.svg?branch=master)
+
 ## HOW TO USE
 
-runtests \<executable\>
-
-* Load executable
-* Scan symbol table for "test_" prefixed names
-* For each test:
-	- initialize 68k core
-	- inject code into 68k core
-	- call "test_" prefix location
-	- wait (timeout in cycles?)
-	- check return code to determine pass/fail
-	- capture exceptions -> fail
-* Output results go either as text-output or as XML output (NUnit/JUnit/XUnit/...)
+* Write test code, as a number of "test_" prefixed labels/functions.
+* Assemble/compile the test code into an Amiga executable with symbols present.
+* Run the tests by doing: `testrunner-68k <executable>`
 
 ## OPEN QUESTIONS
 
