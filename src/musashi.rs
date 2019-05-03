@@ -4,11 +4,9 @@
 use std::ptr;
 use std::sync::Mutex;
 
-use amiga_hunk_parser::{Hunk, HunkParser};
+use amiga_hunk_parser::Hunk;
 
 use super::testcases::{TestCase, TestResult};
-
-use serial_test_derive::serial;
 
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
 
@@ -193,6 +191,9 @@ pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<Test
 }
 
 #[test]
+use serial_test_derive::serial;
+
+#[test]
 #[serial]
 fn run_musashi() {
     unsafe {
@@ -211,6 +212,9 @@ fn run_musashi() {
         assert_eq!(5u32, d0);
     }
 }
+
+#[test]
+use amiga_hunk_parser::HunkParser;
 
 #[test]
 #[serial]
