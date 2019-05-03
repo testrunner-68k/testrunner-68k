@@ -13,28 +13,28 @@ matrix:
 
   include:
 #   - <<: *common_build
-    os: linux
-    dist: xenial
+    # os: linux
+    # dist: xenial
 
-    name: Linux build
-    stage: build
+    # name: Linux build
+    # stage: build
 
-    script:
-    - mkdir deploy
-    - echo "hello" > deploy/file2.txt
+    # script:
+    # - mkdir deploy
+    # - echo "hello" > deploy/file2.txt
 
-    deploy:
-      skip_cleanup: true
+    # deploy:
+    #   skip_cleanup: true
 
-      on:
-        all_branches: true
+    #   on:
+    #     all_branches: true
 
-      provider: gcs
-      access_key_id: GOOGFQGMVO2253Z7JKRE4A7F
-      secret_access_key:
-        secure: bc2efA16UqUVjL7VrvTn1hnNn+ProzTrRRUH1f24xbB6Le2h4OvB4Jt+cFr+QCtpqqzKbSFbkW0G3qHOOkRaqK9fPUwugKOaFcz/dlchalN5R2ajt6Be5Z8NiXp/Skb6PKSdMhAHnAjEvpXbjAcYxxOTswLZqljSIvXJqTIOKaJQHMxnzW8o6edc9tNdiqFeIlgsQzaojOV/RmoTWBcvfUUvhfT+zUJyQVty1l9GJacYAh8+85+UrRa/6XrpcIm8iuh87sOiGaoeZw14gp/0KjAW9hAzEClhH5OEzzaTyccUYeD+pTbjh2ste15hYbx3+Y98kmRfxuuvS/xNLfaD5bT3zguLWzIUiTkNqjv9pFU4tsl/Yfe8wcewIPzGxsSsvINTWnEETg7L71cWcfnj/Z3dvAeMwbqGZ7XQdIbYyMy0N7nsoHF3hxZTk9oCujlcq1rW55AaDNev7qCy1bMX0+jn8OGelaRCppcyjxS7oAd/ixCLfAAJHWT4ZYSLh5x2WvpgSzPL2RN+dNRYDXDmECF05vd8FpD3FdVQaNA6c/rTS+0Og/uLqhsDaA3sDRX1PDVFfYLcrGeD2GFcllh8aMTa55oQbuwhVDWOt8O8KZrMqWhoGurxULI2MaMK3d4thyfn9oSL6drNjSQi+MiMedr+0Gq4FGgfm179zOCIIYE=
-      bucket: testrunner-68k-artifacts
-      local-dir: deploy
+    #   provider: gcs
+    #   access_key_id: GOOGFQGMVO2253Z7JKRE4A7F
+    #   secret_access_key:
+    #     secure: bc2efA16UqUVjL7VrvTn1hnNn+ProzTrRRUH1f24xbB6Le2h4OvB4Jt+cFr+QCtpqqzKbSFbkW0G3qHOOkRaqK9fPUwugKOaFcz/dlchalN5R2ajt6Be5Z8NiXp/Skb6PKSdMhAHnAjEvpXbjAcYxxOTswLZqljSIvXJqTIOKaJQHMxnzW8o6edc9tNdiqFeIlgsQzaojOV/RmoTWBcvfUUvhfT+zUJyQVty1l9GJacYAh8+85+UrRa/6XrpcIm8iuh87sOiGaoeZw14gp/0KjAW9hAzEClhH5OEzzaTyccUYeD+pTbjh2ste15hYbx3+Y98kmRfxuuvS/xNLfaD5bT3zguLWzIUiTkNqjv9pFU4tsl/Yfe8wcewIPzGxsSsvINTWnEETg7L71cWcfnj/Z3dvAeMwbqGZ7XQdIbYyMy0N7nsoHF3hxZTk9oCujlcq1rW55AaDNev7qCy1bMX0+jn8OGelaRCppcyjxS7oAd/ixCLfAAJHWT4ZYSLh5x2WvpgSzPL2RN+dNRYDXDmECF05vd8FpD3FdVQaNA6c/rTS+0Og/uLqhsDaA3sDRX1PDVFfYLcrGeD2GFcllh8aMTa55oQbuwhVDWOt8O8KZrMqWhoGurxULI2MaMK3d4thyfn9oSL6drNjSQi+MiMedr+0Gq4FGgfm179zOCIIYE=
+    #   bucket: testrunner-68k-artifacts
+    #   local-dir: deploy
 
 #     before_install:
 #     # Build Tundra from source & install
@@ -53,10 +53,27 @@ matrix:
 # #    - cargo test
 
 #   - <<: *common_build
-#     os: windows
+    os: windows
 
-#     name: Windows build
-#     stage: build
+    name: Windows build
+    stage: build
+
+    script:
+    - mkdir deploy
+    - echo "hello" > deploy/file3.txt
+
+    deploy:
+      skip_cleanup: true
+
+      on:
+        all_branches: true
+
+      provider: gcs
+      access_key_id: GOOGFQGMVO2253Z7JKRE4A7F
+      secret_access_key:
+        secure: bc2efA16UqUVjL7VrvTn1hnNn+ProzTrRRUH1f24xbB6Le2h4OvB4Jt+cFr+QCtpqqzKbSFbkW0G3qHOOkRaqK9fPUwugKOaFcz/dlchalN5R2ajt6Be5Z8NiXp/Skb6PKSdMhAHnAjEvpXbjAcYxxOTswLZqljSIvXJqTIOKaJQHMxnzW8o6edc9tNdiqFeIlgsQzaojOV/RmoTWBcvfUUvhfT+zUJyQVty1l9GJacYAh8+85+UrRa/6XrpcIm8iuh87sOiGaoeZw14gp/0KjAW9hAzEClhH5OEzzaTyccUYeD+pTbjh2ste15hYbx3+Y98kmRfxuuvS/xNLfaD5bT3zguLWzIUiTkNqjv9pFU4tsl/Yfe8wcewIPzGxsSsvINTWnEETg7L71cWcfnj/Z3dvAeMwbqGZ7XQdIbYyMy0N7nsoHF3hxZTk9oCujlcq1rW55AaDNev7qCy1bMX0+jn8OGelaRCppcyjxS7oAd/ixCLfAAJHWT4ZYSLh5x2WvpgSzPL2RN+dNRYDXDmECF05vd8FpD3FdVQaNA6c/rTS+0Og/uLqhsDaA3sDRX1PDVFfYLcrGeD2GFcllh8aMTa55oQbuwhVDWOt8O8KZrMqWhoGurxULI2MaMK3d4thyfn9oSL6drNjSQi+MiMedr+0Gq4FGgfm179zOCIIYE=
+      bucket: testrunner-68k-artifacts
+      local-dir: deploy
 
 #     before_install:
 #     # Fetch Tundra installer
