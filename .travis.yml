@@ -30,7 +30,7 @@ matrix:
       script:
 
         # Build Musashi
-        - tundra2
+        - tundra2 linux-gcc-debug-default linux-gcc-release-default
 
         # Run testrunner-68k tests
         - cargo test
@@ -71,7 +71,7 @@ matrix:
 
         # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
         # Then, build Musashi
-        - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2'
+        - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2 win32-msvc-debug-default win32-msvc-release-default'
 
         # Run testrunner-68k tests
         - cargo test
