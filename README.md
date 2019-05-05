@@ -20,3 +20,19 @@
 	* stdout/stderr capture
 	* file serving
 	* floppy disk mounting
+
+## DEVELOPING
+
+### Requirements
+
+* Install [Tundra 2.0](https://github.com/deplinenoise/tundra)
+* Install [MSVC 2017](https://visualstudio.microsoft.com/vs/older-downloads/) (Windows) or GCC (Linux)
+* Install [LLVM/Clang](http://releases.llvm.org/download.html) (Windows) or via apt-get (Linux)
+* Install [Rust](https://www.rust-lang.org/tools/install)
+
+### Build executable
+
+* On Windows: ensure the 64-bit `cl.exe` is available on the command line
+* `tundra2`
+* `cargo test`
+* `cargo build`
