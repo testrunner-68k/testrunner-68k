@@ -10,3 +10,6 @@
 
 # Visual Studio Code's temp folder
 /.vscode
+
+# Files created by deploy steps in build scripts
+/deploy

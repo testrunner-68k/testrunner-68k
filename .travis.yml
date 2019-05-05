@@ -74,19 +74,13 @@ matrix:
 
       script:
 
+        # Allow invocation of PowerShell scripts
+        - PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
+
         # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-        # Then, build Musashi
-        - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && tundra2 win32-msvc-debug-default win32-msvc-release-default'
-
-        # Run testrunner-68k tests
-        - cargo test
-
-        # Build testrunner-68k executable in release config
-        - cargo build --release
-
-        # Include testrunner-68k executable with deploy
-        - mkdir deploy
-        - cp target/release/testrunner-68k.exe deploy
+        # Then, run build script
+        - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && powershell build-scripts\windows-build.ps1'
+        # If successful, this will provide deploy/testrunner-68k.exe, ready for deployment
 
       deploy:
         skip_cleanup: true
