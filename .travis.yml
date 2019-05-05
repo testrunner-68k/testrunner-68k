@@ -31,12 +31,7 @@ matrix:
         - cd ..
 
       script:
-
-        # Build Musashi
-        - tundra2 linux-gcc-debug-default linux-gcc-release-default
-
-        # Run testrunner-68k tests
-        - cargo test
+        - ./build-scripts/linux-build.sh
 
       ### Placeholder deploy script ###
       # script:
