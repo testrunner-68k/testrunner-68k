@@ -72,19 +72,12 @@ matrix:
         # For the time being, use Travis' build number to uniquely identify builds
         - BUILD_ID=$TRAVIS_BUILD_NUMBER
 
-        - echo $TRAVIS_BUILD_NUMBER
-        - echo $TRAVIS_TAG
-        - echo $BUILD_ID
-
-        - echo '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && powershell build-scripts\windows-build.ps1 -BuildId $BUILD_ID'
-        - echo "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && powershell build-scripts\windows-build.ps1 -BuildId $BUILD_ID
-
         # Allow invocation of PowerShell scripts
         - PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
 
         # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
         # Then, run build script
-        #- cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && powershell build-scripts\windows-build.ps1 -BuildId $BUILD_ID'
+        - echo "\"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat\" amd64 && powershell build-scripts\windows-build.ps1 -BuildId $BUILD_ID"
         # If successful, this will provide deploy/testrunner-68k.exe, ready for deployment
 
       deploy:
