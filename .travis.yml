@@ -1,9 +1,9 @@
 
 __common: &common_build
-  language: rust
-  rust: stable
-  cache: cargo
-#  language: cpp
+  # language: rust
+  # rust: stable
+  # cache: cargo
+  language: shell
 
 stages:
   - build
