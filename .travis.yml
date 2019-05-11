@@ -79,6 +79,7 @@ matrix:
         - powershell build-scripts/windows-build.ps1 -BuildId $TRAVIS_BUILD_NUMBER
         # If successful, this will provide deploy/testrunner-68k.exe, ready for deployment
 
+        - ls -l deploy
 
       deploy:
         skip_cleanup: true
