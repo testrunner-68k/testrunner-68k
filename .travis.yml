@@ -67,15 +67,18 @@ matrix:
         # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
         - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
 
+        # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
+        - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\vcvars64_vs2017.bat"
+
       script:
 
         # Allow invocation of PowerShell scripts
         - PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
 
-        # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-        # Then, run build script
-        - cmd.exe /C '"C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" amd64 && powershell build-scripts\windows-build.ps1'
+        # Run build script
+        - powershell build-scripts/windows-build.ps1
         # If successful, this will provide deploy/testrunner-68k.exe, ready for deployment
+
 
       deploy:
         skip_cleanup: true
