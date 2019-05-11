@@ -158,20 +158,18 @@ IFS=":"
 read -r -a current_path_cygwin <<< "$PATH"
 unset IFS
 
-# Updated path = current path, excluding deletions
+# Updated path = additions, followed by current path, excluding deletions
 
 declare -a updated_path_cygwin
 updated_path_cygwin=()
+for path in "${!path_additions_cygwin[@]}"; do
+	updated_path_cygwin+=("$path")
+done
+
 for path in "${current_path_cygwin[@]}"; do
 	if [[ -z "${path_deletions_cygwin[$path]+dummy}" ]]; then
 		updated_path_cygwin+=("$path")
 	fi
-done
-
-# Apply path additions to updated path
-
-for path in "${!path_additions_cygwin[@]}"; do
-	updated_path_cygwin+=("$path")
 done
 
 # Convert updated path to a single string
