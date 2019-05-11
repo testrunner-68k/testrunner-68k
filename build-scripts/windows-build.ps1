@@ -16,7 +16,8 @@ if ($LASTEXITCODE -ne 0) { throw "Building testrunner-68k in debug configuration
 cargo --% build --release
 if ($LASTEXITCODE -ne 0) { throw "Building testrunner-68k in release configuration failed with exit code $LASTEXITCODE" }
 
-# Include testrunner-68k executable with deploy
+# Package up testrunner-68k windows binaries for deploy
 if (Test-Path deploy) { rd -recurse deploy }
 md deploy
-copy target\release\testrunner-68k.exe deploy
+7z --% a deploy\testrunner-68k-windows-binaries.zip .\target\release\testrunner-68k.exe
+if ($LASTEXITCODE -ne 0) { throw "Creating windows binaries zip archive failed with exit code $LASTEXITCODE" }
