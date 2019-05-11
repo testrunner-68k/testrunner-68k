@@ -1,3 +1,4 @@
+$ErrorActionPreference = "Stop"
 
 # Build Musashi in debug & release configurations
 tundra2 win32-msvc-debug-default win32-msvc-release-default
