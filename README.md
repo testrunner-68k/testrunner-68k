@@ -36,3 +36,10 @@
 * `tundra2`
 * `cargo test`
 * `cargo build`
+
+# Legal
+
+testrunner-68k is licensed under the MIT license.
+
+testrunner-68k makes use of Musashi, by Karl Stenerud. See [the License and Copyright section of Musashi's readme file - it is a BSD-style license](musashi/readme.txt).
+
