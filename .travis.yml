@@ -49,6 +49,7 @@ matrix:
       #   secret_access_key:
       #     secure: JmJkUPDMsrRDXeIquCR2zBJNCQxNXdDzTYbzCJQZj3lUk4T/CS+Yk3mxiKwhoYm0GHyv2EnYCsCtJDpElk29T3qan4aC1PWyxZgYjEB80JbpRQ4LaMguKO1YAH6dUfwXFUg/nnZALgUqLVxKqLdXHOzc/IY87AGldYR963c3tGx+p737NryI7v/abDW2ENOZq7W0UTNynDDt7geO0VbNy0grxTVAZuhg46M7GE5qoWjldHqRUYOzRROqo/fzyJD7ZAKa9fw1iB5v1CGSYjVm4TfxMuQLpeqJjz2GtWOcHi1cmwZVRSV1UXsBJwXGBoqR59Eb6f//rJu+mThwGclK2h/86ECQcZzwems3Y2OQX8B5jd31PlUKGIE3VrUnm87bwo8A4ixR8m7SnUsk/K/2ao5xj211zBWClBmAIYApVSZSgMqXb4GvN5ye5SIT5Jod+hfljEDSGC4HXEpPHpuq9d8LZ7GQx7OJb6NaAXmThL7eq3vbOW3FnYC4H9q+OqhizDzkYxkeb9dWw4mECp43FQykWpPN2N2ApdCUXKiCTjOGrSvfR6sAfyanv3TE8DTwWXLMwEMeNnCxUEkvuUIvPSO82tRM6/4LDkiAzk6p4jFsbFimzpCE8W1p1oth1iudc5K4XvEc1SARx4prCS/rrEFDaQlhY3VB8jWJ6Bejbsw=
       #   bucket: testrunner-68k-artifacts
+      #   region: eu-west-1
       #   local-dir: deploy
       #   acl: public_read
 
@@ -91,6 +92,7 @@ matrix:
         secret_access_key:
           secure: JmJkUPDMsrRDXeIquCR2zBJNCQxNXdDzTYbzCJQZj3lUk4T/CS+Yk3mxiKwhoYm0GHyv2EnYCsCtJDpElk29T3qan4aC1PWyxZgYjEB80JbpRQ4LaMguKO1YAH6dUfwXFUg/nnZALgUqLVxKqLdXHOzc/IY87AGldYR963c3tGx+p737NryI7v/abDW2ENOZq7W0UTNynDDt7geO0VbNy0grxTVAZuhg46M7GE5qoWjldHqRUYOzRROqo/fzyJD7ZAKa9fw1iB5v1CGSYjVm4TfxMuQLpeqJjz2GtWOcHi1cmwZVRSV1UXsBJwXGBoqR59Eb6f//rJu+mThwGclK2h/86ECQcZzwems3Y2OQX8B5jd31PlUKGIE3VrUnm87bwo8A4ixR8m7SnUsk/K/2ao5xj211zBWClBmAIYApVSZSgMqXb4GvN5ye5SIT5Jod+hfljEDSGC4HXEpPHpuq9d8LZ7GQx7OJb6NaAXmThL7eq3vbOW3FnYC4H9q+OqhizDzkYxkeb9dWw4mECp43FQykWpPN2N2ApdCUXKiCTjOGrSvfR6sAfyanv3TE8DTwWXLMwEMeNnCxUEkvuUIvPSO82tRM6/4LDkiAzk6p4jFsbFimzpCE8W1p1oth1iudc5K4XvEc1SARx4prCS/rrEFDaQlhY3VB8jWJ6Bejbsw=
         bucket: testrunner-68k-artifacts
+        region: eu-west-1
         local-dir: deploy
         acl: public_read
 
