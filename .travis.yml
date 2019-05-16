@@ -32,7 +32,7 @@ matrix:
 
       script:
         # Run build script
-        - ./build-scripts/linux-build.sh
+        - ./build-scripts/linux-build.sh ${TRAVIS_BUILD_NUMBER}
         # If successful, this will provide files in the deploy folder, ready for deployment
 
       deploy:
