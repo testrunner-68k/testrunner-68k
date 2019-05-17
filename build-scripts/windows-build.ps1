@@ -6,7 +6,6 @@ Param(
 $ErrorActionPreference = "Stop"
 
 # Inject build ID into Cargo.toml, if it has been specified
-echo "BuildId: .${BuildId}."
 if ($BuildId -ne "")
 {
     (Get-Content Cargo.toml) -replace '^version *= *".*"$', "version = `"0.0.0-build${BuildId}`"" | Out-File -Encoding UTF8 Cargo.toml
