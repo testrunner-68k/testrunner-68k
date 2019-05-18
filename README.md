@@ -13,9 +13,7 @@ apt-get install testrunner-68k
 
 ### Windows
 
-- Download the latest Windows zip from [the GitHub Releases page](https://github.com/Kalmalyzer/testrunner-68k/releases)
-- Unpack it somewhere
-- Add the folder to your PATH.
+- Download and run the latest Windows installer from [the GitHub Releases page](https://github.com/Kalmalyzer/testrunner-68k/releases)
 
 ## HOW TO USE
 
@@ -45,7 +43,6 @@ apt-get install testrunner-68k
 * Install [MSVC 2017](https://visualstudio.microsoft.com/vs/older-downloads/) (Windows) or GCC (Linux)
 * Install [LLVM/Clang](http://releases.llvm.org/download.html) (Windows) or via apt-get (Linux)
 * Install [Rust](https://www.rust-lang.org/tools/install)
-* Install [cargo-deb](https://crates.io/crates/cargo-deb) (Linux)
 
 ### Build & test
 
