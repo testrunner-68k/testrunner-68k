@@ -1,4 +1,10 @@
 
+env:
+  global:
+  - TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID=AKIAT67P2JAB23KORCF2
+  # TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY
+  - secure: UlACxbe+pOz/7CHIuwUa5DLKlqklst4kAonwsRt0E4LaBhQgGWgO8JTubPN7OKrt0aPYPa6bGofhYI75OvRy4Dp2YMuJC35vV7wEmvu8EN9hP9TYhk7ibCby0cQIw8luCsoS5I++aUp/g0CBjtTjf9pDUWa9i8RtyTzOCJ+KEU+s9EwiF67dFobuMkqBIRpgqiXmuR5E4iukhp/QnuAUhzhOSsdSgbG64B5ZT47YWWzjt80IvA1thADXqP07IElHgufCvphi0hlMPPaKsa6ylAjTrh6tc5xa1VjdOKjcIgWuaYMLr6J6gEtXWu3TV+i5pF/lq82AtbO3o7nZFxT8gB60hGUnu5qp4x4V9YVhoxUrWrB89P7ALFYX0S3fi6O79vo5kT93/KkYKKLFitQb6INk2xtntNv/4uniYzfPGdd0Jc5pweC+wbjdcBM/GFMiOCv5DlHBGd7vCmSRMf7GQNQNVTnemAa9pEwF0NySL1xwtZYhld8RyT2hRtgL/Nth1ZFZVV00jNpejFcZmaEfsG4e80N+iJSUm+8TwLdJXPfqKBo64WC6tApIp1N8ORWCe0iXmCJboJyrIkQqJInPV5t1xn+lYDBWa/8AxVUnkg8yfUv/Na2sVBLwAlxTm6roiPhJaALbedxSuYZ5xBwSbUAc5dYlHmsNlGXA0J/QCEg=
+
 __common: &common_build
   language: rust
   rust: stable
@@ -107,9 +113,14 @@ matrix:
 
       if: (tag =~ /^release-/)
 
+      before_install:
+        - gem install deb-s3
+
       script:
         - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-build${TRAVIS_BUILD_NUMBER}-windows-binaries.zip
         - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k_0.0.0-build${TRAVIS_BUILD_NUMBER}_amd64.deb
+
+        - deb-s3 upload --bucket=testrunner-68k-apt --s3-region=eu-west-1 --access-key-id=${TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID} --secret-access-key=${TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY} testrunner-68k_0.0.0-build${TRAVIS_BUILD_NUMBER}_amd64.deb
 
       deploy:
         skip_cleanup: true
