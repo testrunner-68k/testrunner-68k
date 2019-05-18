@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 # Inject build ID into Cargo.toml, if it has been specified
 if ($BuildId -ne "")
 {
-    (Get-Content Cargo.toml) -replace '^version *= *".*"$', "version = `"0.0.0-build${BuildId}`"" | Out-File -Encoding UTF8 Cargo.toml
+    (Get-Content Cargo.toml) -replace '^version *= *".*"$', "version = `"0.0.${BuildId}`"" | Out-File -Encoding UTF8 Cargo.toml
 }
 
 # Build Musashi in debug & release configurations
@@ -32,6 +32,6 @@ if ($BuildId -ne "")
     # Package up testrunner-68k windows binaries for deploy
     if (Test-Path deploy) { rd -recurse deploy }
     md deploy
-    7z a deploy\testrunner-68k-build${BuildId}-windows-binaries.zip .\target\release\testrunner-68k.exe
+    7z a deploy\testrunner-68k-0.0.${BuildId}-windows-binaries.zip .\target\release\testrunner-68k.exe
     if ($LASTEXITCODE -ne 0) { throw "Creating windows binaries zip archive failed with exit code $LASTEXITCODE" }
 }

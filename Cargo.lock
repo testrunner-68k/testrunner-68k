@@ -350,7 +350,7 @@ dependencies = [
 
 [[package]]
 name = "testrunner-68k"
-version = "0.0.0-localbuild"
+version = "0.0.0"
 dependencies = [
  "amiga_hunk_parser 0.1.0 (git+https://github.com/kalmalyzer/amiga_hunk_parser)",
  "bindgen 0.49.0 (registry+https://github.com/rust-lang/crates.io-index)",

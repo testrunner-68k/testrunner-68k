@@ -4,7 +4,7 @@ BUILD_ID="$1"
 
 # Inject build ID into Cargo.toml, if it exists
 if [[ -n "$BUILD_ID" ]]; then
-    sed -i -e "s/^version *= *\"0.0.0-localbuild\"$/version = \"0.0.0-build${BUILD_ID}\"/" Cargo.toml
+    sed -i -e "s/^version *= *\".*\"$/version = \"0.0.${BUILD_ID}\"/" Cargo.toml
 fi
 
 # Build Musashi
@@ -23,5 +23,5 @@ if [[ -n "$BUILD_ID" ]]; then
     # Package up application as .deb package
     cargo deb --no-build
     mkdir -p deploy
-    cp target/debian/testrunner-68k_0.0.0-build${BUILD_ID}_amd64.deb deploy/
+    cp target/debian/testrunner-68k_0.0.${BUILD_ID}_amd64.deb deploy/
 fi
