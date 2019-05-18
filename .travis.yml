@@ -73,6 +73,10 @@ matrix:
         # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
         - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\vcvars64_vs2017.bat"
 
+        # Install WiX Toolset
+        - powershell Install-WindowsFeature Net-Framework-Core
+        - cinst -y wixtoolset
+
       script:
 
         # Allow invocation of PowerShell scripts
@@ -118,6 +122,7 @@ matrix:
 
       script:
         - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-windows-binaries.zip
+        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-x86_64.msi
         - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k_0.0.${TRAVIS_BUILD_NUMBER}_amd64.deb
 
         - deb-s3 upload --bucket=testrunner-68k-apt --s3-region=eu-west-1 --access-key-id=${TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID} --secret-access-key=${TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY} testrunner-68k_0.0.${TRAVIS_BUILD_NUMBER}_amd64.deb
@@ -131,6 +136,7 @@ matrix:
         prerelease: false
         file:
           - testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-windows-binaries.zip
+          - testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-x86_64.msi
           - testrunner-68k_0.0.${TRAVIS_BUILD_NUMBER}_amd64.deb
 
         on:

@@ -29,9 +29,14 @@ if ($LASTEXITCODE -ne 0) { throw "Building testrunner-68k in release configurati
 
 if ($BuildId -ne "")
 {
-    # Package up testrunner-68k windows binaries for deploy
     if (Test-Path deploy) { rd -recurse deploy }
     md deploy
+
+    # Package up testrunner-68k windows binaries for deploy
     7z a deploy\testrunner-68k-0.0.${BuildId}-windows-binaries.zip .\target\release\testrunner-68k.exe
     if ($LASTEXITCODE -ne 0) { throw "Creating windows binaries zip archive failed with exit code $LASTEXITCODE" }
+
+    # Create windows installer, and move to deploy
+    cargo wix
+    Copy-Item target\wix\testrunner-68k-0.0.${BuildId}-x86_64.msi deploy
 }
