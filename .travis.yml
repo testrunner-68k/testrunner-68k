@@ -80,7 +80,7 @@ matrix:
 
         # Install WiX Toolset
         - powershell Install-WindowsFeature Net-Framework-Core
-        - cinst -y wixtoolset
+        - source ./build-scripts/run_command_and_apply_environment_differences.sh "cinst -y wixtoolset"
 
       script:
 
