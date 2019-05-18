@@ -3,6 +3,9 @@ name = "testrunner-68k"
 version = "0.0.0-localbuild"
 authors = ["Mikael Kalms <mikael@kalms.org>"]
 edition = "2018"
+description = "Test runner for Motorola 680x0 code"
+homepage = "https://github.com/Kalmalyzer/testrunner-68k"
+license = "MIT"
 
 [build-dependencies]
 bindgen = "0.49.0"
