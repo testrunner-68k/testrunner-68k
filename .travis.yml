@@ -73,6 +73,11 @@ matrix:
         # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
         - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\vcvars64_vs2017.bat"
 
+        # Install cargo 'wix' subcommand
+        # If the subcommand is already installed, uninstall first; this ensures that the latest version is used
+        - if [[ -n `cargo install --list | grep "cargo-wix"` ]]; then cargo uninstall cargo-wix; fi
+        - cargo install cargo-wix
+
         # Install WiX Toolset
         - powershell Install-WindowsFeature Net-Framework-Core
         - cinst -y wixtoolset
