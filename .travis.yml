@@ -83,7 +83,7 @@ matrix:
         # Install WiX Toolset
         - cinst -y wixtoolset
         # Add WiX Toolset binary path to current install path (as the installer does not refresh the current shell's env vars)
-        - PATH="$PATH:/c/Program Files (x86)/WiX Toolset 3.11/bin"
+        - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\set_environment_vars_for_wix_3.x.bat"
 
       script:
 
