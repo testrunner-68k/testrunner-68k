@@ -1,6 +1,22 @@
 
 # Test runner for Amiga/680x0 code [![Build Status](https://travis-ci.com/Kalmalyzer/testrunner-68k.svg?branch=master)](https://travis-ci.com/Kalmalyzer/testrunner-68k)
 
+## INSTALLATION
+
+### Linux (Ubuntu)
+
+```bash
+add-apt-repository 'deb [trusted=yes] https://testrunner-68k-apt.s3-eu-west-1.amazonaws.com stable main'
+apt-get update
+apt-get install testrunner-68k
+```
+
+### Windows
+
+- Download the latest Windows zip from [the GitHub Releases page](https://github.com/Kalmalyzer/testrunner-68k/releases)
+- Unpack it somewhere
+- Add the folder to your PATH.
+
 ## HOW TO USE
 
 * Write test code, as a number of "test_" prefixed labels/functions.
@@ -29,13 +45,16 @@
 * Install [MSVC 2017](https://visualstudio.microsoft.com/vs/older-downloads/) (Windows) or GCC (Linux)
 * Install [LLVM/Clang](http://releases.llvm.org/download.html) (Windows) or via apt-get (Linux)
 * Install [Rust](https://www.rust-lang.org/tools/install)
+* Install [cargo-deb](https://crates.io/crates/cargo-deb) (Linux)
 
-### Build executable
+### Build & test
 
-* On Windows: ensure the 64-bit `cl.exe` is available on the command line
-* `tundra2`
-* `cargo test`
-* `cargo build`
+Windows (Command Prompt):
+* Ensure the 64-bit `cl.exe` is available on the command line; run `build-scripts\vcvars64_vs2017.bat` if necessary
+* `powershell build-scripts\windows-build.ps1`
+
+Linux:
+* `./build-scripts/linux-build.sh`
 
 # Legal
 
