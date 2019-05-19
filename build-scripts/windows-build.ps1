@@ -1,14 +1,14 @@
 
 Param(
-    [Parameter(Mandatory=$false)] [String] $BuildId
+    [Parameter(Mandatory=$false)] [String] $Version
 )
 
 $ErrorActionPreference = "Stop"
 
 # Inject build ID into Cargo.toml, if it has been specified
-if ($BuildId -ne "")
+if ($Version -ne "")
 {
-    (Get-Content Cargo.toml) -replace '^version *= *".*"$', "version = `"${BuildId}`"" | Out-File -Encoding UTF8 Cargo.toml
+    (Get-Content Cargo.toml) -replace '^version *= *".*"$', "version = `"${Version}`"" | Out-File -Encoding UTF8 Cargo.toml
 }
 
 # Build Musashi in debug & release configurations
@@ -27,16 +27,16 @@ if ($LASTEXITCODE -ne 0) { throw "Building testrunner-68k in debug configuration
 cargo build --release
 if ($LASTEXITCODE -ne 0) { throw "Building testrunner-68k in release configuration failed with exit code $LASTEXITCODE" }
 
-if ($BuildId -ne "")
+if ($Version -ne "")
 {
     if (Test-Path deploy) { rd -recurse deploy }
     md deploy
 
     # Package up testrunner-68k windows binaries for deploy
-    7z a deploy\testrunner-68k-${BuildId}-windows-binaries.zip .\target\release\testrunner-68k.exe
+    7z a deploy\testrunner-68k-${Version}-windows-binaries.zip .\target\release\testrunner-68k.exe
     if ($LASTEXITCODE -ne 0) { throw "Creating windows binaries zip archive failed with exit code $LASTEXITCODE" }
 
     # Create windows installer, and move to deploy
     cargo wix
-    Copy-Item target\wix\testrunner-68k-${BuildId}-x86_64.msi deploy
+    Copy-Item target\wix\testrunner-68k-${Version}-x86_64.msi deploy
 }
