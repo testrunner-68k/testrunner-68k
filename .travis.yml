@@ -1,3 +1,7 @@
+env:
+  globals:
+    - BUILD_ID=`[[ $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "${TRAVIS_TAG:1}" || echo "0.0.${TRAVIS_BUILD_NUMBER}"`
+
 __common: &common_build
   language: rust
   rust: stable
@@ -36,7 +40,7 @@ matrix:
 
       script:
         # Run build script
-        - ./build-scripts/linux-build.sh ${TRAVIS_BUILD_NUMBER}
+        - ./build-scripts/linux-build.sh ${BUILD_ID}
         # If successful, this will provide files in the deploy folder, ready for deployment
 
       deploy:
@@ -91,7 +95,7 @@ matrix:
         - PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
 
         # Run build script
-        - powershell build-scripts/windows-build.ps1 -BuildId "$TRAVIS_BUILD_NUMBER"
+        - powershell build-scripts/windows-build.ps1 -BuildId "$BUILD_ID"
         # If successful, this will provide files in the deploy folder, ready for deployment
 
       deploy:
@@ -118,7 +122,7 @@ matrix:
       os: linux
       dist: xenial
 
-      if: (tag =~ /^release-/)
+      if: (tag =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/)
 
       env:
       - TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID=AKIAT67P2JAB23KORCF2
@@ -129,11 +133,11 @@ matrix:
         - gem install deb-s3
 
       script:
-        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-windows-binaries.zip
-        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-x86_64.msi
-        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k_0.0.${TRAVIS_BUILD_NUMBER}_amd64.deb
+        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-${BUILD_ID}-windows-binaries.zip
+        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-${BUILD_ID}-x86_64.msi
+        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k_${BUILD_ID}_amd64.deb
 
-        - deb-s3 upload --bucket=testrunner-68k-apt --s3-region=eu-west-1 --access-key-id=${TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID} --secret-access-key=${TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY} testrunner-68k_0.0.${TRAVIS_BUILD_NUMBER}_amd64.deb
+        - deb-s3 upload --bucket=testrunner-68k-apt --s3-region=eu-west-1 --access-key-id=${TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID} --secret-access-key=${TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY} testrunner-68k_${BUILD_ID}_amd64.deb
 
       deploy:
         skip_cleanup: true
@@ -143,9 +147,9 @@ matrix:
           secure: WkMMCXx/t1LdcWkyOd59akBj8TCz0ahO3CCnqv14swsO8CrE0QEWQaEYl2bQBrsJ2pnj4Z8Zx/DUZQEaDVThd0lNm4tduJuZaOU4wc5Fm/hRYFDfC36+6CkQTplJXkRVq/Gwb4F/xH8pbHn8pU6JTrfi2Peq11setrX20XaxhBkuqu9KcPrPXNzgxT8hKIUSHCHqkeb1ynUJl5mvOVIolRxpw1jgYCctJvh3Qt/QZTyDoWKtM4IAr4GWPMmD+Wa1h+z2QyDiG9fjzuiGlmhDynU/HDd7AL5yfgw1l27YMy4hNhh26zVmFXkTK0mBODXsAnPO3PrP4JF4QsVygiDFJcmkQ8WjyH3EE0YhChwcOjVSuvqIF36M6X17cZkiULLMMY9QwNuLn8BVFumH8XL6cawq1GacmYkLs4VoQi8on8hE6F3PotwflQOa5TAg5BB/rnGYAZvpZmoZ8bVhpygnxVUvWZFE5VtDPpTOAo47k/gHKcxh6hDmFw/EJ58D3T2qc7MAEoz1t0UB+9NF8tP2xRQ+h47H3mda4e/kmWnkNw8RB1x1ZBk5oEwXAmKYjWXhE0rFbNJXySPPKPP3GwZvdBbtfOH6okryX1sLqEWp+p1Me8e0F4kdpb71XopN6E+pqxruccJBxdyR5ZuBhZMiazpuaV8B1kq68epgv7K8aog=
         prerelease: false
         file:
-          - testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-windows-binaries.zip
-          - testrunner-68k-0.0.${TRAVIS_BUILD_NUMBER}-x86_64.msi
-          - testrunner-68k_0.0.${TRAVIS_BUILD_NUMBER}_amd64.deb
+          - testrunner-68k-${BUILD_ID}-windows-binaries.zip
+          - testrunner-68k-${BUILD_ID}-x86_64.msi
+          - testrunner-68k_${BUILD_ID}_amd64.deb
 
         on:
           tags: true
