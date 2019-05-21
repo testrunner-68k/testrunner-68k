@@ -354,6 +354,7 @@ version = "0.0.0"
 dependencies = [
  "amiga_hunk_parser 0.1.0 (git+https://github.com/kalmalyzer/amiga_hunk_parser)",
  "bindgen 0.49.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serial_test 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serial_test_derive 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",

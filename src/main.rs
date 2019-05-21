@@ -1,7 +1,8 @@
 #[macro_use]
 extern crate lazy_static;
 
-use std::env;
+extern crate clap;
+use clap::{App, Arg};
 
 use amiga_hunk_parser::HunkParser;
 
@@ -31,14 +32,20 @@ fn successful(test_results: &Vec<TestResult>) -> bool {
 
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
 
-    if args.len() < 2 {
-        println!("Usage: testrunner-m68k <executable name>");
-        return;
-    }
+    let matches = App::new(env!("CARGO_PKG_NAME"))
+        .version(env!("CARGO_PKG_VERSION"))
+        .author(env!("CARGO_PKG_AUTHORS"))
+        .about(env!("CARGO_PKG_DESCRIPTION"))
+        .arg(Arg::with_name("INPUT")
+            .help("File with test code")
+            .required(true)
+            .index(1))
+        .get_matches();
 
-    let hunks = HunkParser::parse_file(&args[1]).unwrap();
+    let source_file = matches.value_of("INPUT").unwrap();
+
+    let hunks = HunkParser::parse_file(source_file).unwrap();
     let test_cases = get_test_cases(&hunks);
     let test_results = run_test_cases(&hunks, &test_cases);
     pretty_print_results(&test_results);
