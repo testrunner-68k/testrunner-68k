@@ -38,7 +38,10 @@ fn main() {
 
     let source_file = matches.value_of("INPUT").unwrap();
 
-    let _enabled = ansi_term::enable_ansi_support();
+    #[cfg(windows)]
+    {
+        let _enabled = ansi_term::enable_ansi_support();
+    }
 
     let hunks = HunkParser::parse_file(source_file).unwrap();
     let test_cases = get_test_cases(&hunks);
