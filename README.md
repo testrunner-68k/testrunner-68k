@@ -6,9 +6,10 @@
 ### Linux (Ubuntu)
 
 ```bash
-add-apt-repository 'deb [trusted=yes] https://testrunner-68k-apt.s3-eu-west-1.amazonaws.com stable main'
-apt-get update
-apt-get install testrunner-68k
+echo "deb https://testrunner-68k-apt.s3-eu-west-1.amazonaws.com stable main" | sudo tee /etc/apt/sources.list.d/testrunner-68k.list
+wget https://testrunner-68k-apt.s3-eu-west-1.amazonaws.com/Release.key -O - | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install testrunner-68k
 ```
 
 ### Windows
