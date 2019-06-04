@@ -1,3 +1,4 @@
+
 extern crate ansi_term;
 
 extern crate clap;
@@ -15,7 +16,7 @@ mod prettyprinter;
 mod testcases;
 
 use amigahunk::get_test_cases;
-use musashi::run_test_cases;
+use musashi::runner::run_test_cases;
 use prettyprinter::pretty_print_results;
 use testcases::TestResult;
 
@@ -45,6 +46,7 @@ fn main() {
 
     let hunks = HunkParser::parse_file(source_file).unwrap();
     let test_cases = get_test_cases(&hunks);
+
     let test_results = run_test_cases(&hunks, &test_cases);
     pretty_print_results(&test_results);
 
