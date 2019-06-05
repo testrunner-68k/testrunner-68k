@@ -36,6 +36,7 @@ StaticLibrary {
    Pass = "musashi_library",
    Sources = { "musashi/m68kcpu.c",
       "musashi/m68kdasm.c",
+      "musashi/musashi_rust_wrapper.c",
       run_m68kmake {
          InputFile = "musashi/m68k_in.c",
          OutputFolder = "$(OBJECTDIR)/_musashi_generated",

@@ -2,22 +2,15 @@
 #![allow(nonstandard_style)]
 #![allow(dead_code)]
 
-use std::ptr;
 use std::sync::Mutex;
 
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
+include!(concat!(env!("OUT_DIR"), "/musashi_rust_wrapper.bindings.rs"));
 
 pub struct Context {
     pub memory: Vec<u8>,
     pub emulation_state: Vec<u8>,
 }
-
-struct BoxedContext(*mut Context);
-
-unsafe impl Send for BoxedContext {}
-unsafe impl Sync for BoxedContext {}
-
-static mut context: BoxedContext = BoxedContext(ptr::null_mut());
 
 lazy_static! {
     static ref musashi_core_lock: Mutex<bool> = Mutex::new(true);
@@ -72,13 +65,9 @@ impl Context {
         let _musashi_core_lock_acquired = musashi_core_lock.lock();
 
         unsafe {
-            context = BoxedContext(self as *mut Context);
-
             m68k_init();
             m68k_set_cpu_type(M68K_CPU_TYPE_68000 as u32);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-
-            context = BoxedContext(ptr::null_mut());
         }
     }
 
@@ -87,13 +76,9 @@ impl Context {
         let _musashi_core_lock_acquired = musashi_core_lock.lock();
 
         unsafe {
-            context = BoxedContext(self as *mut Context);
-
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            m68k_pulse_reset();
+            wrapped_m68k_pulse_reset(self as *mut Context as *mut std::ffi::c_void);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-
-            context = BoxedContext(ptr::null_mut());
         }
     }
 
@@ -102,13 +87,10 @@ impl Context {
         let _musashi_core_lock_acquired = musashi_core_lock.lock();
 
         unsafe {
-            context = BoxedContext(self as *mut Context);
-
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            m68k_execute(cycles);
+            let cycles_used = wrapped_m68k_execute(self as *mut Context as *mut std::ffi::c_void, cycles);
+            println!("cycles used: {}", cycles_used);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-
-            context = BoxedContext(ptr::null_mut());
         }
     }
 
@@ -120,44 +102,47 @@ impl Context {
 }
 
 #[no_mangle]
-pub extern fn m68k_read_memory_8(address: u32) -> u32 {
+pub extern fn rust_m68k_read_memory_8(context: *mut Context, address: u32) -> RustM68KReadResult {
     unsafe {
-        (*context.0).read_memory_8(address) as u32
+        RustM68KReadResult { success: true, value: (*context).read_memory_8(address) as u32 }
     }
 }
 
 #[no_mangle]
-pub extern fn m68k_read_memory_16(address: u32) -> u32 {
+pub extern fn rust_m68k_read_memory_16(context: *mut Context, address: u32) -> RustM68KReadResult {
     unsafe {
-        (*context.0).read_memory_16(address) as u32
+        RustM68KReadResult { success: true, value: (*context).read_memory_16(address) as u32 }
     }
 }
 
 #[no_mangle]
-pub extern fn m68k_read_memory_32(address: u32) -> u32 {
+pub extern fn rust_m68k_read_memory_32(context: *mut Context, address: u32) -> RustM68KReadResult {
     unsafe {
-        (*context.0).read_memory_32(address)
+        RustM68KReadResult { success: true, value: (*context).read_memory_32(address) as u32 }
     }
 }
 
 #[no_mangle]
-pub extern fn m68k_write_memory_8(address: u32, value: u32) {
+pub extern fn rust_m68k_write_memory_8(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
-        (*context.0).write_memory_8(address, value as u8)
+        (*context).write_memory_8(address, value as u8);
+        RustM68KWriteResult { success: true }
     }
 }
 
 #[no_mangle]
-pub extern fn m68k_write_memory_16(address: u32, value: u32) {
+pub extern fn rust_m68k_write_memory_16(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
-        (*context.0).write_memory_16(address, value as u16)
+        (*context).write_memory_16(address, value as u16);
+        RustM68KWriteResult { success: true }
     }
 }
 
 #[no_mangle]
-pub extern fn m68k_write_memory_32(address: u32, value: u32) {
+pub extern fn rust_m68k_write_memory_32(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
-        (*context.0).write_memory_32(address, value)
+        (*context).write_memory_32(address, value as u32);
+        RustM68KWriteResult { success: true }
     }
 }
 

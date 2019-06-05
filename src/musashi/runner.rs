@@ -68,7 +68,7 @@ fn setup_emulator_init_and_trampoline(context: &mut Context, stack_ptr: u32, pro
 fn run_emulator_test(context: &mut Context) {
 
     context.reset();
-    context.run(1024);
+    context.run(2048);
 }
 
 fn clear_emulator_test_result() {
