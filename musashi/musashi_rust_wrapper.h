@@ -13,5 +13,10 @@ typedef struct
     bool success;
 } RustM68KWriteResult;
 
+typedef struct 
+{
+    bool success;
+} RustM68KInstructionHookResult;
+
 void wrapped_m68k_pulse_reset(void* context);
 int wrapped_m68k_execute(void* context, int num_cycles);

@@ -146,6 +146,14 @@ pub extern fn rust_m68k_write_memory_32(context: *mut Context, address: u32, val
     }
 }
 
+#[no_mangle]
+pub extern fn rust_m68k_instruction_hook(context: *mut Context) -> RustM68KInstructionHookResult {
+    unsafe {
+        println!("Instruction executed");
+        RustM68KInstructionHookResult { success: true }
+    }
+}
+
 #[test]
 fn run_musashi() {
 

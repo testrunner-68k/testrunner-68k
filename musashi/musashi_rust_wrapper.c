@@ -11,6 +11,8 @@ extern RustM68KWriteResult rust_m68k_write_memory_8(void* context, uint32_t addr
 extern RustM68KWriteResult rust_m68k_write_memory_16(void* context, uint32_t address, uint32_t value);
 extern RustM68KWriteResult rust_m68k_write_memory_32(void* context, uint32_t address, uint32_t value);
 
+extern RustM68KInstructionHookResult rust_m68k_instruction_hook(void* context);
+
 
 extern int m68k_execute(int num_cycles);
 extern void m68k_pulse_reset(void);
@@ -64,6 +66,12 @@ uint32_t m68k_write_memory_32(uint32_t address, uint32_t value)
         longjmp(s_abort_execution, 1);
 }
 
+void m68k_instruction_hook()
+{
+    RustM68KInstructionHookResult result = rust_m68k_instruction_hook(s_context);
+    if (!result.success)
+        longjmp(s_abort_execution, 1);
+}
 
 void wrapped_m68k_pulse_reset(void* context)
 {
