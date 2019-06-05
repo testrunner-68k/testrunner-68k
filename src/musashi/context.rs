@@ -2,6 +2,7 @@
 #![allow(nonstandard_style)]
 #![allow(dead_code)]
 
+use std::ptr;
 use std::sync::Mutex;
 
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
@@ -147,10 +148,16 @@ pub extern fn rust_m68k_write_memory_32(context: *mut Context, address: u32, val
 }
 
 #[no_mangle]
-pub extern fn rust_m68k_instruction_hook(context: *mut Context) -> RustM68KInstructionHookResult {
+pub extern fn rust_m68k_instruction_hook(_context: *mut Context) -> RustM68KInstructionHookResult {
     unsafe {
-        println!("Instruction executed");
-        RustM68KInstructionHookResult { success: true }
+        let pc = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_PC);
+
+        if pc == 0xf0fff0u32 {
+            println!("End of test invoked");
+            RustM68KInstructionHookResult { success: false }
+        } else {
+            RustM68KInstructionHookResult { success: true }
+        }
     }
 }
 
@@ -163,7 +170,8 @@ fn run_musashi() {
     ctx.write_memory_32(4, 0x1000);
 
     ctx.write_memory_16(0x1000, 0x7005);   // MOVEQ #5,d0
-    ctx.write_memory_16(0x1002, 0x60fe);   // BRA.S *
+    ctx.write_memory_16(0x1002, 0x4ef9);   // JUMP $f0fff0
+    ctx.write_memory_32(0x1004, 0xf0fff0); // <address>
 
     ctx.reset();
     ctx.run(1024);
