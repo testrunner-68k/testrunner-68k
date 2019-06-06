@@ -68,7 +68,7 @@ impl Context {
         }
     }
 
-    pub fn run(&mut self, cycles: i32) {
+    pub fn run(&mut self, cycles: i32) -> bool {
 
         let mut execution_context = ExecutionContext::new(&mut self.memory);
 
@@ -76,8 +76,9 @@ impl Context {
 
         unsafe {
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            execution_context.run(cycles);
+            let success = execution_context.run(cycles);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
+            success
         }
     }
 
@@ -97,11 +98,10 @@ fn run_musashi() {
     ctx.write_memory_32(4, 0x1000);
 
     ctx.write_memory_16(0x1000, 0x7005);   // MOVEQ #5,d0
-    ctx.write_memory_16(0x1002, 0x4ef9);   // JUMP $f0fff0
+    ctx.write_memory_16(0x1002, 0x4eb9);   // JSR $f0fff0
     ctx.write_memory_32(0x1004, 0xf0fff0); // <address>
 
-    ctx.run(1024);
+    let success = ctx.run(1024);
 
-    let d0 = ctx.read_register(m68k_register_t_M68K_REG_D0);
-    assert_eq!(5u32, d0);
+    assert_eq!(true, success);
 }

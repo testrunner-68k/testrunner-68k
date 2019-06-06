@@ -8,6 +8,7 @@ include!(concat!(env!("OUT_DIR"), "/musashi_rust_wrapper.bindings.rs"));
 
 pub struct ExecutionContext<'a> {
     pub memory: &'a mut Vec<u8>,
+    pub success: Option<bool>,
 }
 
 impl<'a> ExecutionContext<'a> {
@@ -47,15 +48,21 @@ impl<'a> ExecutionContext<'a> {
     pub fn new(memory: &mut Vec<u8>) -> ExecutionContext {
         ExecutionContext {
             memory: memory,
+            success: None,
         }
     }
 
-    pub fn run(&mut self, cycles: i32) {
+    pub fn run(&mut self, cycles: i32) -> bool {
 
         unsafe {
             wrapped_m68k_pulse_reset(self as *mut ExecutionContext as *mut std::ffi::c_void);
-            let cycles_used = wrapped_m68k_execute(self as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
-            println!("cycles used: {}", cycles_used);
+            let _cycles_used = wrapped_m68k_execute(self as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
+
+            if self.success == None {
+                self.success = Some(false);
+            }
+
+            self.success.unwrap()
         }
     }
 }
@@ -106,12 +113,13 @@ extern fn rust_m68k_write_memory_32(execution_context: *mut ExecutionContext, ad
 }
 
 #[no_mangle]
-extern fn rust_m68k_instruction_hook(_execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
+extern fn rust_m68k_instruction_hook(execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
     unsafe {
         let pc = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_PC);
 
         if pc == 0xf0fff0u32 {
-            println!("End of test invoked");
+            let d0 = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_D0);
+            (*execution_context).success = Some(d0 != 0);
             RustM68KInstructionHookResult { continue_simulation: false }
         } else {
             RustM68KInstructionHookResult { continue_simulation: true }
