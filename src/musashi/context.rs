@@ -84,7 +84,7 @@ impl Context {
 
     pub fn read_register(&self, reg: m68k_register_t) -> u32 {
         unsafe {
-            m68k_get_reg(self.emulation_state.as_ptr() as *mut std::ffi::c_void, reg as u32)
+            m68k_get_reg(self.emulation_state.as_ptr() as *mut std::ffi::c_void, reg)
         }
     }
 }

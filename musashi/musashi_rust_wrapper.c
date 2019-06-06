@@ -52,14 +52,14 @@ void m68k_write_memory_8(uint32_t address, uint32_t value)
         longjmp(s_abort_execution, 1);
 }
 
-uint32_t m68k_write_memory_16(uint32_t address, uint32_t value)
+void m68k_write_memory_16(uint32_t address, uint32_t value)
 {
     RustM68KWriteResult result = rust_m68k_write_memory_16(s_execution_context, address, value);
     if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
 }
 
-uint32_t m68k_write_memory_32(uint32_t address, uint32_t value)
+void m68k_write_memory_32(uint32_t address, uint32_t value)
 {
     RustM68KWriteResult result = rust_m68k_write_memory_32(s_execution_context, address, value);
     if (!result.continue_simulation)
