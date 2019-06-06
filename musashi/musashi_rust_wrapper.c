@@ -24,7 +24,7 @@ static jmp_buf s_abort_execution;
 uint32_t m68k_read_memory_8(uint32_t address)
 {
     RustM68KReadResult result = rust_m68k_read_memory_8(s_context, address);
-    if (!result.success)
+    if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
     return result.value;
 }
@@ -32,7 +32,7 @@ uint32_t m68k_read_memory_8(uint32_t address)
 uint32_t m68k_read_memory_16(uint32_t address)
 {
     RustM68KReadResult result = rust_m68k_read_memory_16(s_context, address);
-    if (!result.success)
+    if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
     return result.value;
 }
@@ -40,7 +40,7 @@ uint32_t m68k_read_memory_16(uint32_t address)
 uint32_t m68k_read_memory_32(uint32_t address)
 {
     RustM68KReadResult result = rust_m68k_read_memory_32(s_context, address);
-    if (!result.success)
+    if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
     return result.value;
 }
@@ -48,28 +48,28 @@ uint32_t m68k_read_memory_32(uint32_t address)
 void m68k_write_memory_8(uint32_t address, uint32_t value)
 {
     RustM68KWriteResult result = rust_m68k_write_memory_8(s_context, address, value);
-    if (!result.success)
+    if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
 }
 
 uint32_t m68k_write_memory_16(uint32_t address, uint32_t value)
 {
     RustM68KWriteResult result = rust_m68k_write_memory_16(s_context, address, value);
-    if (!result.success)
+    if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
 }
 
 uint32_t m68k_write_memory_32(uint32_t address, uint32_t value)
 {
     RustM68KWriteResult result = rust_m68k_write_memory_32(s_context, address, value);
-    if (!result.success)
+    if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
 }
 
 void m68k_instruction_hook()
 {
     RustM68KInstructionHookResult result = rust_m68k_instruction_hook(s_context);
-    if (!result.success)
+    if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
 }
 

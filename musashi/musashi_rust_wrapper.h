@@ -4,18 +4,18 @@
 
 typedef struct 
 {
-    bool success;
+    bool continue_simulation;
     uint32_t value;
 } RustM68KReadResult;
 
 typedef struct 
 {
-    bool success;
+    bool continue_simulation;
 } RustM68KWriteResult;
 
 typedef struct 
 {
-    bool success;
+    bool continue_simulation;
 } RustM68KInstructionHookResult;
 
 void wrapped_m68k_pulse_reset(void* context);

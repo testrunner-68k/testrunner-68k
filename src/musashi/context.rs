@@ -105,21 +105,21 @@ impl Context {
 #[no_mangle]
 pub extern fn rust_m68k_read_memory_8(context: *mut Context, address: u32) -> RustM68KReadResult {
     unsafe {
-        RustM68KReadResult { success: true, value: (*context).read_memory_8(address) as u32 }
+        RustM68KReadResult { continue_simulation: true, value: (*context).read_memory_8(address) as u32 }
     }
 }
 
 #[no_mangle]
 pub extern fn rust_m68k_read_memory_16(context: *mut Context, address: u32) -> RustM68KReadResult {
     unsafe {
-        RustM68KReadResult { success: true, value: (*context).read_memory_16(address) as u32 }
+        RustM68KReadResult { continue_simulation: true, value: (*context).read_memory_16(address) as u32 }
     }
 }
 
 #[no_mangle]
 pub extern fn rust_m68k_read_memory_32(context: *mut Context, address: u32) -> RustM68KReadResult {
     unsafe {
-        RustM68KReadResult { success: true, value: (*context).read_memory_32(address) as u32 }
+        RustM68KReadResult { continue_simulation: true, value: (*context).read_memory_32(address) as u32 }
     }
 }
 
@@ -127,7 +127,7 @@ pub extern fn rust_m68k_read_memory_32(context: *mut Context, address: u32) -> R
 pub extern fn rust_m68k_write_memory_8(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
         (*context).write_memory_8(address, value as u8);
-        RustM68KWriteResult { success: true }
+        RustM68KWriteResult { continue_simulation: true }
     }
 }
 
@@ -135,7 +135,7 @@ pub extern fn rust_m68k_write_memory_8(context: *mut Context, address: u32, valu
 pub extern fn rust_m68k_write_memory_16(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
         (*context).write_memory_16(address, value as u16);
-        RustM68KWriteResult { success: true }
+        RustM68KWriteResult { continue_simulation: true }
     }
 }
 
@@ -143,7 +143,7 @@ pub extern fn rust_m68k_write_memory_16(context: *mut Context, address: u32, val
 pub extern fn rust_m68k_write_memory_32(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
         (*context).write_memory_32(address, value as u32);
-        RustM68KWriteResult { success: true }
+        RustM68KWriteResult { continue_simulation: true }
     }
 }
 
@@ -154,9 +154,9 @@ pub extern fn rust_m68k_instruction_hook(_context: *mut Context) -> RustM68KInst
 
         if pc == 0xf0fff0u32 {
             println!("End of test invoked");
-            RustM68KInstructionHookResult { success: false }
+            RustM68KInstructionHookResult { continue_simulation: false }
         } else {
-            RustM68KInstructionHookResult { success: true }
+            RustM68KInstructionHookResult { continue_simulation: true }
         }
     }
 }
