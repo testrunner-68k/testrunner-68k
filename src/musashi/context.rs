@@ -53,11 +53,11 @@ impl Context {
             emulation_state: vec!(0u8; unsafe { m68k_context_size() } as usize),
         };
 
-        newContext.init();
+        newContext.init_emulation_state();
         newContext
     }
 
-    pub fn init(&mut self) {
+    fn init_emulation_state(&mut self) {
 
         let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
 
@@ -68,29 +68,15 @@ impl Context {
         }
     }
 
-    pub fn reset(&mut self) {
-
-        let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
-
-        let mut execution_context = ExecutionContext::new(&mut self.memory);
-
-        unsafe {
-            m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            wrapped_m68k_pulse_reset(&mut execution_context as *mut ExecutionContext as *mut std::ffi::c_void);
-            m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-        }
-    }
-
     pub fn run(&mut self, cycles: i32) {
 
-        let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
-
         let mut execution_context = ExecutionContext::new(&mut self.memory);
+
+        let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
 
         unsafe {
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            let cycles_used = wrapped_m68k_execute(&mut execution_context as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
-            println!("cycles used: {}", cycles_used);
+            execution_context.run(cycles);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
         }
     }
@@ -114,7 +100,6 @@ fn run_musashi() {
     ctx.write_memory_16(0x1002, 0x4ef9);   // JUMP $f0fff0
     ctx.write_memory_32(0x1004, 0xf0fff0); // <address>
 
-    ctx.reset();
     ctx.run(1024);
 
     let d0 = ctx.read_register(m68k_register_t_M68K_REG_D0);

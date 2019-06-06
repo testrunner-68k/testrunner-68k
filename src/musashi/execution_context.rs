@@ -49,6 +49,15 @@ impl<'a> ExecutionContext<'a> {
             memory: memory,
         }
     }
+
+    pub fn run(&mut self, cycles: i32) {
+
+        unsafe {
+            wrapped_m68k_pulse_reset(self as *mut ExecutionContext as *mut std::ffi::c_void);
+            let cycles_used = wrapped_m68k_execute(self as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
+            println!("cycles used: {}", cycles_used);
+        }
+    }
 }
 
 #[no_mangle]
@@ -109,4 +118,3 @@ extern fn rust_m68k_instruction_hook(_execution_context: *mut ExecutionContext) 
         }
     }
 }
-
