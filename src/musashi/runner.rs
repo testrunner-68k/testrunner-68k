@@ -68,13 +68,13 @@ fn setup_emulator_init_and_trampoline(context: &mut Context, stack_ptr: u32, pro
     context.write_memory_32(4, test_function_start);
 }
 
-fn run_emulator_test(context: &mut Context) -> bool {
+fn run_emulator_test(context: &mut Context) -> (bool, Vec<String>) {
 
     context.run(2048)
 }
 
-fn get_emulator_test_result(success: bool, test_case_name: &String) -> TestResult {
-    TestResult { name: test_case_name.clone(), success: success }
+fn get_emulator_test_result(success: bool, messages: Vec<String>, test_case_name: &String) -> TestResult {
+    TestResult { name: test_case_name.clone(), success: success, messages: messages }
 }
 
 pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> TestResult {
@@ -94,8 +94,8 @@ pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> TestResult {
     load_hunks_into_emulator_memory(&mut context, &hunks, &hunk_layout);
     let test_function_start = get_function_start_address(&hunks, &hunk_layout, &test_case.name);
     setup_emulator_init_and_trampoline(&mut context, stack_ptr, program_done_ptr, test_function_start);
-    let success = run_emulator_test(&mut context);
-    get_emulator_test_result(success, &test_case.name)
+    let (success, messages) = run_emulator_test(&mut context);
+    get_emulator_test_result(success, messages, &test_case.name)
 }
 
 pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<TestResult> {

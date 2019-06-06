@@ -8,4 +8,5 @@ pub struct TestCase {
 pub struct TestResult {
     pub name: String,
     pub success: bool,
+    pub messages: Vec<String>,
 }

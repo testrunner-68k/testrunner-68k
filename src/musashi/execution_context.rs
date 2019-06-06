@@ -9,6 +9,7 @@ include!(concat!(env!("OUT_DIR"), "/musashi_rust_wrapper.bindings.rs"));
 pub struct ExecutionContext<'a> {
     pub memory: &'a mut Vec<u8>,
     pub success: Option<bool>,
+    pub messages: Vec<String>,
 }
 
 impl<'a> ExecutionContext<'a> {
@@ -49,20 +50,24 @@ impl<'a> ExecutionContext<'a> {
         ExecutionContext {
             memory: memory,
             success: None,
+            messages: Vec::new(),
         }
     }
 
-    pub fn run(&mut self, cycles: i32) -> bool {
+    pub fn run(&mut self, cycles: i32) -> (bool, Vec<String>) {
 
         unsafe {
             wrapped_m68k_pulse_reset(self as *mut ExecutionContext as *mut std::ffi::c_void);
             let _cycles_used = wrapped_m68k_execute(self as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
 
             if self.success == None {
+                self.messages.push(format!("Timeout: test case did not finish within {} cycles", cycles));
                 self.success = Some(false);
+            } else {
+                self.messages.push(format!("Test case completed after {} cycles", _cycles_used));
             }
 
-            self.success.unwrap()
+            (self.success.unwrap(), self.messages.to_vec())
         }
     }
 }

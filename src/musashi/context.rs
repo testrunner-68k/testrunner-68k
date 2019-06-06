@@ -68,7 +68,7 @@ impl Context {
         }
     }
 
-    pub fn run(&mut self, cycles: i32) -> bool {
+    pub fn run(&mut self, cycles: i32) -> (bool, Vec<String>) {
 
         let mut execution_context = ExecutionContext::new(&mut self.memory);
 
@@ -76,9 +76,9 @@ impl Context {
 
         unsafe {
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            let success = execution_context.run(cycles);
+            let (success, messages) = execution_context.run(cycles);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            success
+            (success, messages)
         }
     }
 
@@ -101,7 +101,7 @@ fn run_musashi() {
     ctx.write_memory_16(0x1002, 0x4eb9);   // JSR $f0fff0
     ctx.write_memory_32(0x1004, 0xf0fff0); // <address>
 
-    let success = ctx.run(1024);
+    let (success, _messages) = ctx.run(1024);
 
     assert_eq!(true, success);
 }
