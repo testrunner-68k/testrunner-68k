@@ -2,9 +2,8 @@
 #![allow(nonstandard_style)]
 #![allow(dead_code)]
 
-use std::sync::Mutex;
-
 use super::execution_context::ExecutionContext;
+use super::musashi_core_lock::MUSASHI_CORE_LOCK;
 
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
 include!(concat!(env!("OUT_DIR"), "/musashi_rust_wrapper.bindings.rs"));
@@ -12,10 +11,6 @@ include!(concat!(env!("OUT_DIR"), "/musashi_rust_wrapper.bindings.rs"));
 pub struct Context {
     pub memory: Vec<u8>,
     pub emulation_state: Vec<u8>,
-}
-
-lazy_static! {
-    static ref musashi_core_lock: Mutex<bool> = Mutex::new(true);
 }
 
 impl Context {
@@ -64,7 +59,7 @@ impl Context {
 
     pub fn init(&mut self) {
 
-        let _musashi_core_lock_acquired = musashi_core_lock.lock();
+        let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
 
         unsafe {
             m68k_init();
@@ -75,7 +70,7 @@ impl Context {
 
     pub fn reset(&mut self) {
 
-        let _musashi_core_lock_acquired = musashi_core_lock.lock();
+        let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
 
         let mut execution_context = ExecutionContext::new(&mut self.memory);
 
@@ -88,7 +83,7 @@ impl Context {
 
     pub fn run(&mut self, cycles: i32) {
 
-        let _musashi_core_lock_acquired = musashi_core_lock.lock();
+        let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
 
         let mut execution_context = ExecutionContext::new(&mut self.memory);
 
