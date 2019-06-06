@@ -18,5 +18,5 @@ typedef struct
     bool continue_simulation;
 } RustM68KInstructionHookResult;
 
-void wrapped_m68k_pulse_reset(void* context);
-int wrapped_m68k_execute(void* context, int num_cycles);
+void wrapped_m68k_pulse_reset(void* execution_context);
+int wrapped_m68k_execute(void* execution_context, int num_cycles);

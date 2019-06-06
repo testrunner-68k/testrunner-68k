@@ -17,6 +17,10 @@ lazy_static! {
     static ref musashi_core_lock: Mutex<bool> = Mutex::new(true);
 }
 
+struct ExecutionContext<'a> {
+    pub memory: &'a mut Vec<u8>,
+}
+
 impl Context {
 
     pub fn read_memory_8(&self, address: u32) -> u8 {
@@ -76,9 +80,11 @@ impl Context {
 
         let _musashi_core_lock_acquired = musashi_core_lock.lock();
 
+        let mut execution_context = ExecutionContext::new(&mut self.memory);
+
         unsafe {
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            wrapped_m68k_pulse_reset(self as *mut Context as *mut std::ffi::c_void);
+            wrapped_m68k_pulse_reset(&mut execution_context as *mut ExecutionContext as *mut std::ffi::c_void);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
         }
     }
@@ -87,9 +93,11 @@ impl Context {
 
         let _musashi_core_lock_acquired = musashi_core_lock.lock();
 
+        let mut execution_context = ExecutionContext::new(&mut self.memory);
+
         unsafe {
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            let cycles_used = wrapped_m68k_execute(self as *mut Context as *mut std::ffi::c_void, cycles);
+            let cycles_used = wrapped_m68k_execute(&mut execution_context as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
             println!("cycles used: {}", cycles_used);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
         }
@@ -102,53 +110,94 @@ impl Context {
     }
 }
 
-#[no_mangle]
-pub extern fn rust_m68k_read_memory_8(context: *mut Context, address: u32) -> RustM68KReadResult {
-    unsafe {
-        RustM68KReadResult { continue_simulation: true, value: (*context).read_memory_8(address) as u32 }
+impl<'a> ExecutionContext<'a> {
+
+    fn read_memory_8(&self, address: u32) -> u8 {
+        self.memory[address as usize]
+    }
+
+    fn read_memory_16(&self, address: u32) -> u16 {
+        ((self.read_memory_8(address + 0) as u16) << 8)
+        | (self.read_memory_8(address + 1) as u16)
+    }
+
+    fn read_memory_32(&self, address: u32) -> u32 {
+        ((self.read_memory_8(address + 0) as u32) << 24)
+        | ((self.read_memory_8(address + 1) as u32) << 16)
+        | ((self.read_memory_8(address + 2) as u32) << 8)
+        | (self.read_memory_8(address + 3) as u32)
+    }
+
+    fn write_memory_8(&mut self, address: u32, value: u8) {
+        self.memory[address as usize] = value;
+    }
+
+    fn write_memory_16(&mut self, address: u32, value: u16) {
+        self.write_memory_8(address + 0, (value >> 8) as u8);
+        self.write_memory_8(address + 1, value as u8);
+    }
+
+    fn write_memory_32(&mut self, address: u32, value: u32) {
+        self.write_memory_8(address + 0, (value >> 24) as u8);
+        self.write_memory_8(address + 1, (value >> 16) as u8);
+        self.write_memory_8(address + 2, (value >> 8) as u8);
+        self.write_memory_8(address + 3, value as u8);
+    }
+
+    fn new(memory: &mut Vec<u8>) -> ExecutionContext {
+        ExecutionContext {
+            memory: memory,
+        }
     }
 }
 
 #[no_mangle]
-pub extern fn rust_m68k_read_memory_16(context: *mut Context, address: u32) -> RustM68KReadResult {
+extern fn rust_m68k_read_memory_8(execution_context: *mut ExecutionContext, address: u32) -> RustM68KReadResult {
     unsafe {
-        RustM68KReadResult { continue_simulation: true, value: (*context).read_memory_16(address) as u32 }
+        RustM68KReadResult { continue_simulation: true, value: (*execution_context).read_memory_8(address) as u32 }
     }
 }
 
 #[no_mangle]
-pub extern fn rust_m68k_read_memory_32(context: *mut Context, address: u32) -> RustM68KReadResult {
+extern fn rust_m68k_read_memory_16(execution_context: *mut ExecutionContext, address: u32) -> RustM68KReadResult {
     unsafe {
-        RustM68KReadResult { continue_simulation: true, value: (*context).read_memory_32(address) as u32 }
+        RustM68KReadResult { continue_simulation: true, value: (*execution_context).read_memory_16(address) as u32 }
     }
 }
 
 #[no_mangle]
-pub extern fn rust_m68k_write_memory_8(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
+extern fn rust_m68k_read_memory_32(execution_context: *mut ExecutionContext, address: u32) -> RustM68KReadResult {
     unsafe {
-        (*context).write_memory_8(address, value as u8);
+        RustM68KReadResult { continue_simulation: true, value: (*execution_context).read_memory_32(address) as u32 }
+    }
+}
+
+#[no_mangle]
+extern fn rust_m68k_write_memory_8(execution_context: *mut ExecutionContext, address: u32, value: u32) -> RustM68KWriteResult {
+    unsafe {
+        (*execution_context).write_memory_8(address, value as u8);
         RustM68KWriteResult { continue_simulation: true }
     }
 }
 
 #[no_mangle]
-pub extern fn rust_m68k_write_memory_16(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
+extern fn rust_m68k_write_memory_16(execution_context: *mut ExecutionContext, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
-        (*context).write_memory_16(address, value as u16);
+        (*execution_context).write_memory_16(address, value as u16);
         RustM68KWriteResult { continue_simulation: true }
     }
 }
 
 #[no_mangle]
-pub extern fn rust_m68k_write_memory_32(context: *mut Context, address: u32, value: u32) -> RustM68KWriteResult {
+extern fn rust_m68k_write_memory_32(execution_context: *mut ExecutionContext, address: u32, value: u32) -> RustM68KWriteResult {
     unsafe {
-        (*context).write_memory_32(address, value as u32);
+        (*execution_context).write_memory_32(address, value as u32);
         RustM68KWriteResult { continue_simulation: true }
     }
 }
 
 #[no_mangle]
-pub extern fn rust_m68k_instruction_hook(_context: *mut Context) -> RustM68KInstructionHookResult {
+extern fn rust_m68k_instruction_hook(_execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
     unsafe {
         let pc = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_PC);
 
