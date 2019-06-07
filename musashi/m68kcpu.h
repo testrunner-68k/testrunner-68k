@@ -460,6 +460,13 @@
 	#define m68ki_instr_hook()
 #endif /* M68K_INSTRUCTION_HOOK */
 
+#ifdef M68K_EXCEPTION_ILLEGAL_CALLBACK
+	#define m68ki_exception_illegal() M68K_EXCEPTION_ILLEGAL_CALLBACK()
+#else
+	#define m68ki_exception_illegal() m68ki_exception_illegal_default()
+#endif /* M68K_EXCEPTION_ILLEGAL_CALLBACK */
+
+
 #if M68K_MONITOR_PC
 	#if M68K_MONITOR_PC == OPT_SPECIFY_HANDLER
 		#define m68ki_pc_changed(A) M68K_SET_PC_CALLBACK(ADDRESS_68K(A))
@@ -979,7 +986,7 @@ INLINE void m68ki_exception_trace(void);
 INLINE void m68ki_exception_privilege_violation(void);
 INLINE void m68ki_exception_1010(void);
 INLINE void m68ki_exception_1111(void);
-INLINE void m68ki_exception_illegal(void);
+void m68ki_exception_illegal_default(void);
 INLINE void m68ki_exception_format_error(void);
 INLINE void m68ki_exception_address_error(void);
 INLINE void m68ki_exception_interrupt(uint int_level);
@@ -1828,31 +1835,6 @@ INLINE void m68ki_exception_1111(void)
 
 	/* Use up some clock cycles and undo the instruction's cycles */
 	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_1111] - CYC_INSTRUCTION[REG_IR]);
-}
-
-/* Exception for illegal instructions */
-INLINE void m68ki_exception_illegal(void)
-{
-	uint sr;
-
-	M68K_DO_LOG((M68K_LOG_FILEHANDLE "%s at %08x: illegal instruction %04x (%s)\n",
-				 m68ki_cpu_names[CPU_TYPE], ADDRESS_68K(REG_PPC), REG_IR,
-				 m68ki_disassemble_quick(ADDRESS_68K(REG_PPC))));
-
-	sr = m68ki_init_exception();
-
-	#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
-	if(CPU_TYPE_IS_000(CPU_TYPE))
-	{
-		CPU_INSTR_MODE = INSTRUCTION_NO;
-	}
-	#endif /* M68K_EMULATE_ADDRESS_ERROR */
-
-	m68ki_stack_frame_0000(REG_PPC, sr, EXCEPTION_ILLEGAL_INSTRUCTION);
-	m68ki_jump_vector(EXCEPTION_ILLEGAL_INSTRUCTION);
-
-	/* Use up some clock cycles and undo the instruction's cycles */
-	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_ILLEGAL_INSTRUCTION] - CYC_INSTRUCTION[REG_IR]);
 }
 
 /* Exception for format errror in RTE */

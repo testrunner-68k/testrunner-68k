@@ -127,3 +127,11 @@ fn run_failed_test() {
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success)
 }
+
+#[test]
+fn run_illegal_instruction_test() {
+    let hunks = HunkParser::parse_file("testdata/test.illegal_instruction.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_illegalInstruction".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(false, test_result.success)
+}

@@ -876,6 +876,31 @@ void m68k_state_register(const char *type)
 
 #endif /* M68K_COMPILE_FOR_MAME */
 
+/* Exception for illegal instructions */
+void m68ki_exception_illegal_default(void)
+{
+	uint sr;
+
+	M68K_DO_LOG((M68K_LOG_FILEHANDLE "%s at %08x: illegal instruction %04x (%s)\n",
+				 m68ki_cpu_names[CPU_TYPE], ADDRESS_68K(REG_PPC), REG_IR,
+				 m68ki_disassemble_quick(ADDRESS_68K(REG_PPC))));
+
+	sr = m68ki_init_exception();
+
+	#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
+	if(CPU_TYPE_IS_000(CPU_TYPE))
+	{
+		CPU_INSTR_MODE = INSTRUCTION_NO;
+	}
+	#endif /* M68K_EMULATE_ADDRESS_ERROR */
+
+	m68ki_stack_frame_0000(REG_PPC, sr, EXCEPTION_ILLEGAL_INSTRUCTION);
+	m68ki_jump_vector(EXCEPTION_ILLEGAL_INSTRUCTION);
+
+	/* Use up some clock cycles and undo the instruction's cycles */
+	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_ILLEGAL_INSTRUCTION] - CYC_INSTRUCTION[REG_IR]);
+}
+
 /* ======================================================================== */
 /* ============================== END OF FILE ============================= */
 /* ======================================================================== */

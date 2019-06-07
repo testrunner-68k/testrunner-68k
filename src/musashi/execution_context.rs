@@ -131,3 +131,12 @@ extern fn rust_m68k_instruction_hook(execution_context: *mut ExecutionContext) -
         }
     }
 }
+
+#[no_mangle]
+extern fn rust_m68k_exception_illegal_hook(execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
+    unsafe {
+        (*execution_context).messages.push(String::from("Exception: illegal instruction"));
+        (*execution_context).success = Some(false);
+        RustM68KInstructionHookResult { continue_simulation: false }
+    }
+}

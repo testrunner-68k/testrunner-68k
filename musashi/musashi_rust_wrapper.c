@@ -12,11 +12,12 @@ extern RustM68KWriteResult rust_m68k_write_memory_16(void* execution_context, ui
 extern RustM68KWriteResult rust_m68k_write_memory_32(void* execution_context, uint32_t address, uint32_t value);
 
 extern RustM68KInstructionHookResult rust_m68k_instruction_hook(void* execution_context);
+extern RustM68KInstructionHookResult rust_m68k_exception_illegal_hook(void* execution_context);
 
 
 extern int m68k_execute(int num_cycles);
 extern void m68k_pulse_reset(void);
-
+extern void m68ki_exception_illegal_default(void);
 
 static void* s_execution_context = NULL;
 static jmp_buf s_abort_execution;
@@ -71,6 +72,14 @@ void m68k_instruction_hook()
     RustM68KInstructionHookResult result = rust_m68k_instruction_hook(s_execution_context);
     if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
+}
+
+void m68k_exception_illegal_custom()
+{
+    RustM68KInstructionHookResult result = rust_m68k_exception_illegal_hook(s_execution_context);
+    if (!result.continue_simulation)
+        longjmp(s_abort_execution, 1);
+    m68ki_exception_illegal_default();
 }
 
 void wrapped_m68k_pulse_reset(void* execution_context)
