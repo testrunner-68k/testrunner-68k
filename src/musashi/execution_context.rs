@@ -3,13 +3,15 @@
 
 use std::ptr;
 
+use super::simulation_event::SimulationEvent;
+
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
 include!(concat!(env!("OUT_DIR"), "/musashi_rust_wrapper.bindings.rs"));
 
 pub struct ExecutionContext<'a> {
     pub memory: &'a mut Vec<u8>,
     pub success: Option<bool>,
-    pub messages: Vec<String>,
+    pub events: Vec<SimulationEvent>,
 }
 
 impl<'a> ExecutionContext<'a> {
@@ -50,24 +52,22 @@ impl<'a> ExecutionContext<'a> {
         ExecutionContext {
             memory: memory,
             success: None,
-            messages: Vec::new(),
+            events: Vec::new(),
         }
     }
 
-    pub fn run(&mut self, cycles: i32) -> (bool, Vec<String>) {
+    pub fn run(&mut self, cycles: i32) -> (bool, Vec<SimulationEvent>) {
 
         unsafe {
             wrapped_m68k_pulse_reset(self as *mut ExecutionContext as *mut std::ffi::c_void);
             let _cycles_used = wrapped_m68k_execute(self as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
 
             if self.success == None {
-                self.messages.push(format!("Timeout: test case did not finish within {} cycles", cycles));
+                self.events.push(SimulationEvent::TimedOut);
                 self.success = Some(false);
-            } else {
-                self.messages.push(format!("Test case completed after {} cycles", _cycles_used));
             }
 
-            (self.success.unwrap(), self.messages.to_vec())
+            (self.success.unwrap(), self.events.to_vec())
         }
     }
 }
@@ -124,7 +124,9 @@ extern fn rust_m68k_instruction_hook(execution_context: *mut ExecutionContext) -
 
         if pc == 0xf0fff0u32 {
             let d0 = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_D0);
-            (*execution_context).success = Some(d0 != 0);
+            let success = d0 != 0;
+            (*execution_context).events.push( if success { SimulationEvent::Passed } else { SimulationEvent::Failed } );
+            (*execution_context).success = Some(success);
             RustM68KInstructionHookResult { continue_simulation: false }
         } else {
             RustM68KInstructionHookResult { continue_simulation: true }
@@ -135,7 +137,7 @@ extern fn rust_m68k_instruction_hook(execution_context: *mut ExecutionContext) -
 #[no_mangle]
 extern fn rust_m68k_exception_illegal_hook(execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
     unsafe {
-        (*execution_context).messages.push(String::from("Exception: illegal instruction"));
+        (*execution_context).events.push(SimulationEvent::IllegalInstruction);
         (*execution_context).success = Some(false);
         RustM68KInstructionHookResult { continue_simulation: false }
     }

@@ -4,6 +4,7 @@
 
 use super::execution_context::ExecutionContext;
 use super::musashi_core_lock::MUSASHI_CORE_LOCK;
+use super::simulation_event::SimulationEvent;
 
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
 include!(concat!(env!("OUT_DIR"), "/musashi_rust_wrapper.bindings.rs"));
@@ -68,7 +69,7 @@ impl Context {
         }
     }
 
-    pub fn run(&mut self, cycles: i32) -> (bool, Vec<String>) {
+    pub fn run(&mut self, cycles: i32) -> (bool, Vec<SimulationEvent>) {
 
         let mut execution_context = ExecutionContext::new(&mut self.memory);
 
@@ -76,9 +77,9 @@ impl Context {
 
         unsafe {
             m68k_set_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            let (success, messages) = execution_context.run(cycles);
+            let (success, events) = execution_context.run(cycles);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
-            (success, messages)
+            (success, events)
         }
     }
 
@@ -101,7 +102,7 @@ fn run_musashi() {
     ctx.write_memory_16(0x1002, 0x4eb9);   // JSR $f0fff0
     ctx.write_memory_32(0x1004, 0xf0fff0); // <address>
 
-    let (success, _messages) = ctx.run(1024);
+    let (success, _events) = ctx.run(1024);
 
     assert_eq!(true, success);
 }

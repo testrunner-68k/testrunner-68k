@@ -17,6 +17,7 @@ mod testcases;
 
 use amigahunk::get_test_cases;
 use musashi::runner::run_test_cases;
+use musashi::musashi_test_result::musashi_test_results_to_test_results;
 use prettyprinter::pretty_print_results;
 use testcases::TestResult;
 
@@ -47,7 +48,9 @@ fn main() {
     let hunks = HunkParser::parse_file(source_file).unwrap();
     let test_cases = get_test_cases(&hunks);
 
-    let test_results = run_test_cases(&hunks, &test_cases);
+    let musashi_test_results = run_test_cases(&hunks, &test_cases);
+    let test_results = musashi_test_results_to_test_results(&musashi_test_results);
+
     pretty_print_results(&test_results);
 
     std::process::exit( if successful(&test_results) { 0 } else { 1 });

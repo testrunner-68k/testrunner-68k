@@ -1,8 +1,11 @@
 
 use amiga_hunk_parser::Hunk;
 
-use super::super::testcases::{TestCase, TestResult};
+use super::super::testcases::TestCase;
 use super::context::Context;
+use super::musashi_test_result::MusashiTestResult;
+use super::simulation_event::SimulationEvent;
+
 
 // Compute start address for each hunk
 pub fn layout_hunks(hunks: &Vec<Hunk>, start_address: u32) -> Vec<u32> {
@@ -63,16 +66,12 @@ fn setup_emulator_init_and_trampoline(context: &mut Context, stack_ptr: u32, pro
     context.write_memory_32(4, test_function_start);
 }
 
-fn run_emulator_test(context: &mut Context) -> (bool, Vec<String>) {
+fn run_emulator_test(context: &mut Context) -> (bool, Vec<SimulationEvent>) {
 
     context.run(2048)
 }
 
-fn get_emulator_test_result(success: bool, messages: Vec<String>, test_case_name: &String) -> TestResult {
-    TestResult { name: test_case_name.clone(), success: success, messages: messages }
-}
-
-pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> TestResult {
+pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> MusashiTestResult {
 
     let memory_size = (1024 * 1024) as u32;
     let stack_size = 4096u32;
@@ -89,13 +88,13 @@ pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> TestResult {
     load_hunks_into_emulator_memory(&mut context, &hunks, &hunk_layout);
     let test_function_start = get_function_start_address(&hunks, &hunk_layout, &test_case.name);
     setup_emulator_init_and_trampoline(&mut context, stack_ptr, program_done_ptr, test_function_start);
-    let (success, messages) = run_emulator_test(&mut context);
-    get_emulator_test_result(success, messages, &test_case.name)
+    let (success, events) = run_emulator_test(&mut context);
+    MusashiTestResult { name: test_case.name.clone(), success: success, events: events }
 }
 
-pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<TestResult> {
+pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<MusashiTestResult> {
 
-    let mut test_results: Vec<TestResult> = Vec::new();
+    let mut test_results: Vec<MusashiTestResult> = Vec::new();
 
     for test_case in test_cases {
         test_results.push(run_test_case(&hunks, &test_case));
