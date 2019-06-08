@@ -111,7 +111,8 @@ fn run_successful_test() {
     let hunks = HunkParser::parse_file("testdata/test.successful_test_case.amiga.exe").unwrap();
     let test_case = TestCase { name: "test_TestModule_successfulCase".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
-    assert_eq!(true, test_result.success)
+    assert_eq!(true, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::Passed))
 }
 
 #[test]
@@ -119,7 +120,8 @@ fn run_failed_test() {
     let hunks = HunkParser::parse_file("testdata/test.failed_test_case.amiga.exe").unwrap();
     let test_case = TestCase { name: "test_TestModule_failedCase".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
-    assert_eq!(false, test_result.success)
+    assert_eq!(false, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::Failed))
 }
 
 #[test]
@@ -127,5 +129,6 @@ fn run_illegal_instruction_test() {
     let hunks = HunkParser::parse_file("testdata/test.illegal_instruction.amiga.exe").unwrap();
     let test_case = TestCase { name: "test_TestModule_illegalInstruction".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
-    assert_eq!(false, test_result.success)
+    assert_eq!(false, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::IllegalInstruction))
 }

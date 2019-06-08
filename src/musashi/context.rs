@@ -102,7 +102,8 @@ fn run_musashi() {
     ctx.write_memory_16(0x1002, 0x4eb9);   // JSR $f0fff0
     ctx.write_memory_32(0x1004, 0xf0fff0); // <address>
 
-    let (success, _events) = ctx.run(1024);
+    let (success, events) = ctx.run(1024);
 
     assert_eq!(true, success);
+    assert_eq!(events, vec!(SimulationEvent::Passed));
 }
