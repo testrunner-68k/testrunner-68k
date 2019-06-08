@@ -7,8 +7,6 @@ use amiga_hunk_parser::Hunk;
 use super::super::testcases::{TestCase, TestResult};
 use super::context::Context;
 
-include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
-
 // Compute start address for each hunk
 pub fn layout_hunks(hunks: &Vec<Hunk>, start_address: u32) -> Vec<u32> {
 
