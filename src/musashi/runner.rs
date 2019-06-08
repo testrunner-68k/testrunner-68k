@@ -1,7 +1,4 @@
 
-#![allow(nonstandard_style)]
-#![allow(dead_code)]
-
 use amiga_hunk_parser::Hunk;
 
 use super::super::testcases::{TestCase, TestResult};
