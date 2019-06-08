@@ -2,7 +2,7 @@
 use super::simulation_event::SimulationEvent;
 use super::super::testcases::TestResult;
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct MusashiTestResult {
     pub name: String,
     pub success: bool,
@@ -17,13 +17,7 @@ pub fn musashi_test_results_to_test_results(musashi_test_results: &Vec<MusashiTe
         let mut messages: Vec<String> = Vec::new();
 
         for event in musashi_test_result.events.iter() {
-            match event {
-                SimulationEvent::Passed => messages.push(String::from("Test passed")),
-                SimulationEvent::Failed => messages.push(String::from("Test failed")),
-                SimulationEvent::TimedOut => messages.push(String::from("Test timed out")),
-                SimulationEvent::IllegalInstruction => messages.push(String::from("Illegal instruction encountered")),
-                SimulationEvent::Print { message } => messages.push(message.to_string()),
-            }
+            messages.push(format!("{}", event));
         }
 
         let test_result = TestResult {
