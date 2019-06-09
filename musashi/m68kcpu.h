@@ -361,6 +361,7 @@
 #define CALLBACK_PC_CHANGED  m68ki_cpu.pc_changed_callback
 #define CALLBACK_SET_FC      m68ki_cpu.set_fc_callback
 #define CALLBACK_INSTR_HOOK  m68ki_cpu.instr_hook_callback
+#define CALLBACK_EXCEPTION_ILLEGAL_HOOK  m68ki_cpu.exception_illegal_hook_callback
 
 
 
@@ -460,10 +461,14 @@
 	#define m68ki_instr_hook()
 #endif /* M68K_INSTRUCTION_HOOK */
 
-#ifdef M68K_EXCEPTION_ILLEGAL_CALLBACK
-	#define m68ki_exception_illegal() M68K_EXCEPTION_ILLEGAL_CALLBACK()
+#ifdef M68K_EXCEPTION_ILLEGAL
+	#if M68K_EXCEPTION_ILLEGAL == OPT_SPECIFY_HANDLER
+		#define m68ki_exception_illegal_hook() M68K_EXCEPTION_ILLEGAL_CALLBACK()
+	#else
+		#define m68ki_exception_illegal_hook() CALLBACK_EXCEPTION_ILLEGAL_HOOK()
+	#endif
 #else
-	#define m68ki_exception_illegal() m68ki_exception_illegal_default()
+	#define m68ki_exception_illegal_hook()
 #endif /* M68K_EXCEPTION_ILLEGAL_CALLBACK */
 
 
@@ -858,6 +863,7 @@ typedef struct
 	void (*pc_changed_callback)(unsigned int new_pc); /* Called when the PC changes by a large amount */
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */
+	void (*exception_illegal_hook_callback)(void);    /* Called before taking illegal instruction exception */
 
 } m68ki_cpu_core;
 
@@ -986,7 +992,7 @@ INLINE void m68ki_exception_trace(void);
 INLINE void m68ki_exception_privilege_violation(void);
 INLINE void m68ki_exception_1010(void);
 INLINE void m68ki_exception_1111(void);
-void m68ki_exception_illegal_default(void);
+void m68ki_exception_illegal(void);
 INLINE void m68ki_exception_format_error(void);
 INLINE void m68ki_exception_address_error(void);
 INLINE void m68ki_exception_interrupt(uint int_level);

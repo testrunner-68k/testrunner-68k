@@ -135,9 +135,12 @@
 #define M68K_INSTRUCTION_CALLBACK() m68k_instruction_hook()
 extern void m68k_instruction_hook(void);
 
-/* If defined, declares the illegal exception handler to use */
-#define M68K_EXCEPTION_ILLEGAL_CALLBACK() m68k_exception_illegal_custom()
-extern void m68k_exception_illegal_custom(void);
+/* If ON, CPU will call the illegal exception hook callback before
+ * processing an illegal exception handler.
+ */
+#define M68K_EXCEPTION_ILLEGAL      OPT_SPECIFY_HANDLER
+#define M68K_EXCEPTION_ILLEGAL_CALLBACK() m68k_exception_illegal_hook()
+extern void m68k_exception_illegal_hook(void);
 
 /* If ON, the CPU will emulate the 4-byte prefetch queue of a real 68000 */
 #define M68K_EMULATE_PREFETCH       OPT_OFF

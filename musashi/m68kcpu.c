@@ -409,6 +409,11 @@ static void default_instr_hook_callback(void)
 {
 }
 
+/* Called before taking illegal instruction exception */
+static void default_exception_illegal_hook_callback(void)
+{
+}
+
 
 #if M68K_EMULATE_ADDRESS_ERROR
 	#include <setjmp.h>
@@ -560,6 +565,11 @@ void m68k_set_fc_callback(void  (*callback)(unsigned int new_fc))
 void m68k_set_instr_hook_callback(void  (*callback)(void))
 {
 	CALLBACK_INSTR_HOOK = callback ? callback : default_instr_hook_callback;
+}
+
+void m68k_set_exception_illegal_hook_callback(void  (*callback)(void))
+{
+	CALLBACK_EXCEPTION_ILLEGAL_HOOK = callback ? callback : default_exception_illegal_hook_callback;
 }
 
 /* Set the CPU type. */
@@ -754,6 +764,7 @@ void m68k_init(void)
 	m68k_set_pc_changed_callback(NULL);
 	m68k_set_fc_callback(NULL);
 	m68k_set_instr_hook_callback(NULL);
+	m68k_set_exception_illegal_hook_callback(NULL);
 }
 
 /* Pulse the RESET line on the CPU */
@@ -877,13 +888,15 @@ void m68k_state_register(const char *type)
 #endif /* M68K_COMPILE_FOR_MAME */
 
 /* Exception for illegal instructions */
-void m68ki_exception_illegal_default(void)
+void m68ki_exception_illegal(void)
 {
 	uint sr;
 
 	M68K_DO_LOG((M68K_LOG_FILEHANDLE "%s at %08x: illegal instruction %04x (%s)\n",
 				 m68ki_cpu_names[CPU_TYPE], ADDRESS_68K(REG_PPC), REG_IR,
 				 m68ki_disassemble_quick(ADDRESS_68K(REG_PPC))));
+
+	m68ki_exception_illegal_hook();
 
 	sr = m68ki_init_exception();
 
