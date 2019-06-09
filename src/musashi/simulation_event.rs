@@ -1,6 +1,19 @@
 use std::fmt;
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum OperationSize {
+    Byte,
+    Word,
+    LongWord
+}
+
+impl fmt::Display for OperationSize {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum SimulationEvent {
 	Passed,
 	Failed,
@@ -10,7 +23,7 @@ pub enum SimulationEvent {
     LineFException,
 	IllegalInstruction,
     AddressError { address: u32, write: bool, function_code: u32 },
-    BusError,
+    BusError { address: u32, write: bool, operation_size: OperationSize },
     Print { message: String },
 }
 
@@ -25,7 +38,7 @@ impl fmt::Display for SimulationEvent {
             SimulationEvent::LineFException => write!(f, "Line-F exception"),
             SimulationEvent::IllegalInstruction => write!(f, "Illegal instruction encountered"),
             SimulationEvent::AddressError { address, write, function_code } => write!(f, "Address error encountered, access address: 0x{:x}, {}, function code: {}", address, if *write { "write" } else { "read" }, function_code),
-            SimulationEvent::BusError => write!(f, "Bus error encountered"),
+            SimulationEvent::BusError { address, write, operation_size } => write!(f, "Bus error encountered, access address: 0x{:x}, {}, size: {}", address, if *write { "write" } else { "read" }, *operation_size),
             SimulationEvent::Print { message } => write!(f, "{}", message.to_string()),
         }
     }
@@ -41,6 +54,6 @@ fn test_simulation_event_to_string() {
     assert_eq!("Line-F exception", format!("{}", SimulationEvent::LineFException));
     assert_eq!("Illegal instruction encountered", format!("{}", SimulationEvent::IllegalInstruction));
     assert_eq!("Address error encountered, access address: 0x11337755, read, function code: 2", format!("{}", SimulationEvent::AddressError { address: 0x11337755u32, write: false, function_code: 2 } ));
-    assert_eq!("Bus error encountered", format!("{}", SimulationEvent::BusError));
+    assert_eq!("Bus error encountered, access address: 0x123456, write, size: LongWord", format!("{}", SimulationEvent::BusError { address: 0x123456u32, write: true, operation_size: OperationSize::LongWord } ));
     assert_eq!("smurf", format!("{}", SimulationEvent::Print { message: String::from("smurf") } ));
 }

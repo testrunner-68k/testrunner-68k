@@ -3,7 +3,7 @@
 
 use std::ptr;
 
-use super::simulation_event::SimulationEvent;
+use super::simulation_event::{OperationSize, SimulationEvent};
 use super::memory_subsystem::MemorySubSystem;
 
 include!(concat!(env!("OUT_DIR"), "/musashi.bindings.rs"));
@@ -72,7 +72,7 @@ extern fn rust_m68k_read_memory_8(execution_context: *mut ExecutionContext, addr
         match result {
             Some(value) => RustM68KReadResult { continue_simulation: true, value: value as u32 },
             None => {
-                (*execution_context).events.push( SimulationEvent::BusError );
+                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::Byte });
                 (*execution_context).success = Some(false);
                 RustM68KReadResult { continue_simulation: false, value: 0u32 }
             }
@@ -87,7 +87,7 @@ extern fn rust_m68k_read_memory_16(execution_context: *mut ExecutionContext, add
         match result {
             Some(value) => RustM68KReadResult { continue_simulation: true, value: value as u32 },
             None => {
-                (*execution_context).events.push( SimulationEvent::BusError );
+                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::Word });
                 (*execution_context).success = Some(false);
                 RustM68KReadResult { continue_simulation: false, value: 0u32 }
             }
@@ -102,7 +102,7 @@ extern fn rust_m68k_read_memory_32(execution_context: *mut ExecutionContext, add
         match result {
             Some(value) => RustM68KReadResult { continue_simulation: true, value: value as u32 },
             None => {
-                (*execution_context).events.push( SimulationEvent::BusError );
+                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::LongWord });
                 (*execution_context).success = Some(false);
                 RustM68KReadResult { continue_simulation: false, value: 0u32 }
             }
@@ -117,7 +117,7 @@ extern fn rust_m68k_write_memory_8(execution_context: *mut ExecutionContext, add
         if result {
             RustM68KWriteResult { continue_simulation: true }
         } else {
-            (*execution_context).events.push( SimulationEvent::BusError );
+            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::Byte });
             (*execution_context).success = Some(false);
             RustM68KWriteResult { continue_simulation: false }
         }
@@ -131,7 +131,7 @@ extern fn rust_m68k_write_memory_16(execution_context: *mut ExecutionContext, ad
         if result {
             RustM68KWriteResult { continue_simulation: true }
         } else {
-            (*execution_context).events.push( SimulationEvent::BusError );
+            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::Word });
             (*execution_context).success = Some(false);
             RustM68KWriteResult { continue_simulation: false }
         }
@@ -145,7 +145,7 @@ extern fn rust_m68k_write_memory_32(execution_context: *mut ExecutionContext, ad
         if result {
             RustM68KWriteResult { continue_simulation: true }
         } else {
-            (*execution_context).events.push( SimulationEvent::BusError );
+            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::LongWord });
             (*execution_context).success = Some(false);
             RustM68KWriteResult { continue_simulation: false }
         }

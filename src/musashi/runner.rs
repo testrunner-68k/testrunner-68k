@@ -4,7 +4,7 @@ use amiga_hunk_parser::Hunk;
 use super::super::testcases::TestCase;
 use super::context::Context;
 use super::musashi_test_result::MusashiTestResult;
-use super::simulation_event::SimulationEvent;
+use super::simulation_event::{OperationSize, SimulationEvent};
 
 
 // Compute start address for each hunk
@@ -175,5 +175,5 @@ fn run_bus_error_test() {
     let test_case = TestCase { name: "test_TestModule_busError".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::BusError))
+    assert_eq!(test_result.events, vec!(SimulationEvent::BusError { address: 0xf00000u32, write: false, operation_size: OperationSize::LongWord }))
 }
