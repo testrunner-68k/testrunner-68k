@@ -156,8 +156,8 @@ extern void m68k_exception_illegal_hook(void);
  * processing an address error handler.
  */
 #define M68K_EXCEPTION_ADDRESS_ERROR      OPT_SPECIFY_HANDLER
-#define M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK(address) m68k_exception_address_error_hook(address)
-extern void m68k_exception_address_error_hook(unsigned int address);
+#define M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK(address, write_mode, function_code) m68k_exception_address_error_hook(address, write_mode, function_code)
+extern void m68k_exception_address_error_hook(unsigned int address, unsigned int write_mode, unsigned int function_code);
 
 /* Turn ON to enable logging of illegal instruction calls.
  * M68K_LOG_FILEHANDLE must be #defined to a stdio file stream.

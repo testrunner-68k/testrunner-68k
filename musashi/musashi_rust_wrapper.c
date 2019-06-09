@@ -3,6 +3,9 @@
 #include <stddef.h>
 #include "musashi_rust_wrapper.h"
 
+// Taken from m68kcpu.h
+#define MODE_WRITE 0
+
 extern RustM68KReadResult rust_m68k_read_memory_8(void* execution_context, uint32_t address);
 extern RustM68KReadResult rust_m68k_read_memory_16(void* execution_context, uint32_t address);
 extern RustM68KReadResult rust_m68k_read_memory_32(void* execution_context, uint32_t address);
@@ -13,7 +16,7 @@ extern RustM68KWriteResult rust_m68k_write_memory_32(void* execution_context, ui
 
 extern RustM68KInstructionHookResult rust_m68k_instruction_hook(void* execution_context);
 extern RustM68KInstructionHookResult rust_m68k_exception_illegal_hook(void* execution_context);
-extern RustM68KInstructionHookResult rust_m68k_exception_address_error_hook(void* execution_context, uint32_t address);
+extern RustM68KInstructionHookResult rust_m68k_exception_address_error_hook(void* execution_context, uint32_t address, bool write, uint32_t function_code);
 
 
 extern int m68k_execute(int num_cycles);
@@ -81,9 +84,9 @@ void m68k_exception_illegal_hook()
         longjmp(s_abort_execution, 1);
 }
 
-void m68k_exception_address_error_hook(uint32_t address)
+void m68k_exception_address_error_hook(uint32_t address, uint32_t write_mode, uint32_t function_code)
 {
-    RustM68KInstructionHookResult result = rust_m68k_exception_address_error_hook(s_execution_context, address);
+    RustM68KInstructionHookResult result = rust_m68k_exception_address_error_hook(s_execution_context, address, (write_mode == MODE_WRITE ? 1 : 0), function_code);
     if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
 }

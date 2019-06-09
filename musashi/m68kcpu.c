@@ -415,7 +415,7 @@ static void default_exception_illegal_hook_callback(void)
 }
 
 /* Called before taking address error exception */
-static void default_exception_address_error_hook_callback(uint address)
+static void default_exception_address_error_hook_callback(uint address, uint write_mode, uint function_code)
 {
 }
 
@@ -577,7 +577,7 @@ void m68k_set_exception_illegal_hook_callback(void  (*callback)(void))
 	CALLBACK_EXCEPTION_ILLEGAL_HOOK = callback ? callback : default_exception_illegal_hook_callback;
 }
 
-void m68k_set_exception_address_error_hook_callback(void  (*callback)(uint address))
+void m68k_set_exception_address_error_hook_callback(void  (*callback)(uint address, uint write_mode, uint function_code))
 {
 	CALLBACK_EXCEPTION_ADDRESS_ERROR_HOOK = callback ? callback : default_exception_address_error_hook_callback;
 }
@@ -930,7 +930,7 @@ void m68ki_exception_address_error(void)
 {
 	uint sr;
 
-	m68ki_exception_address_error_hook(m68ki_aerr_address);
+	m68ki_exception_address_error_hook(m68ki_aerr_address, m68ki_aerr_write_mode, m68ki_aerr_fc);
 
 	sr = m68ki_init_exception();
 

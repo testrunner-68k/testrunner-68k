@@ -474,12 +474,12 @@
 
 #ifdef M68K_EXCEPTION_ADDRESS_ERROR
 	#if M68K_EXCEPTION_ADDRESS_ERROR == OPT_SPECIFY_HANDLER
-		#define m68ki_exception_address_error_hook(address) M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK(address)
+		#define m68ki_exception_address_error_hook(address, write_mode, function_code) M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK(address, write_mode, function_code)
 	#else
-		#define m68ki_exception_address_error_hook(address) CALLBACK_EXCEPTION_ADDRESS_ERROR_HOOK(address)
+		#define m68ki_exception_address_error_hook(address, write_mode, function_code) CALLBACK_EXCEPTION_ADDRESS_ERROR_HOOK(address, write_mode, function_code)
 	#endif
 #else
-	#define m68ki_exception_address_error_hook(address)
+	#define m68ki_exception_address_error_hook(address, write_mode, function_code)
 #endif /* M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK */
 
 
@@ -875,7 +875,7 @@ typedef struct
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */
 	void (*exception_illegal_hook_callback)(void);    /* Called before taking illegal instruction exception */
-	void (*exception_address_error_hook_callback)(uint address);    /* Called before taking address error exception */
+	void (*exception_address_error_hook_callback)(uint address, uint write_mode, uint function_code);    /* Called before taking address error exception */
 
 } m68ki_cpu_core;
 

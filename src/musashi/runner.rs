@@ -139,5 +139,5 @@ fn run_address_error_test() {
     let test_case = TestCase { name: "test_TestModule_addressError".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::AddressError { address: 0x4321u32 } ))
+    assert_eq!(test_result.events, vec!(SimulationEvent::AddressError { address: 0x4321u32, write: false, function_code: 5 } ))
 }
