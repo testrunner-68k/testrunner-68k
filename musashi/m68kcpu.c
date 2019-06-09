@@ -414,6 +414,11 @@ static void default_exception_illegal_hook_callback(void)
 {
 }
 
+/* Called before taking address error exception */
+static void default_exception_address_error_hook_callback(uint address)
+{
+}
+
 
 #if M68K_EMULATE_ADDRESS_ERROR
 	#include <setjmp.h>
@@ -570,6 +575,11 @@ void m68k_set_instr_hook_callback(void  (*callback)(void))
 void m68k_set_exception_illegal_hook_callback(void  (*callback)(void))
 {
 	CALLBACK_EXCEPTION_ILLEGAL_HOOK = callback ? callback : default_exception_illegal_hook_callback;
+}
+
+void m68k_set_exception_address_error_hook_callback(void  (*callback)(uint address))
+{
+	CALLBACK_EXCEPTION_ADDRESS_ERROR_HOOK = callback ? callback : default_exception_address_error_hook_callback;
 }
 
 /* Set the CPU type. */
@@ -765,6 +775,7 @@ void m68k_init(void)
 	m68k_set_fc_callback(NULL);
 	m68k_set_instr_hook_callback(NULL);
 	m68k_set_exception_illegal_hook_callback(NULL);
+	m68k_set_exception_address_error_hook_callback(NULL);
 }
 
 /* Pulse the RESET line on the CPU */
@@ -913,6 +924,40 @@ void m68ki_exception_illegal(void)
 	/* Use up some clock cycles and undo the instruction's cycles */
 	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_ILLEGAL_INSTRUCTION] - CYC_INSTRUCTION[REG_IR]);
 }
+
+/* Exception for address error */
+void m68ki_exception_address_error(void)
+{
+	uint sr = m68ki_init_exception();
+
+	uint address = 0x87654321; // TODO: Provide the actual address
+
+	m68ki_exception_address_error_hook(address);
+
+	/* If we were processing a bus error, address error, or reset,
+	 * this is a catastrophic failure.
+	 * Halt the CPU
+	 */
+	if(CPU_RUN_MODE == RUN_MODE_BERR_AERR_RESET)
+	{
+m68k_read_memory_8(0x00ffff01);
+		CPU_STOPPED = STOP_LEVEL_HALT;
+		return;
+	}
+	CPU_RUN_MODE = RUN_MODE_BERR_AERR_RESET;
+
+	/* Note: This is implemented for 68000 only! */
+	m68ki_stack_frame_buserr(sr);
+
+	m68ki_jump_vector(EXCEPTION_ADDRESS_ERROR);
+
+	/* Use up some clock cycles. Note that we don't need to undo the 
+	instruction's cycles here as we've longjmp:ed directly from the
+	instruction handler without passing the part of the excecute loop
+	that deducts instruction cycles */
+	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_ADDRESS_ERROR]); 
+}
+
 
 /* ======================================================================== */
 /* ============================== END OF FILE ============================= */

@@ -132,3 +132,12 @@ fn run_illegal_instruction_test() {
     assert_eq!(false, test_result.success);
     assert_eq!(test_result.events, vec!(SimulationEvent::IllegalInstruction))
 }
+
+#[test]
+fn run_address_error_test() {
+    let hunks = HunkParser::parse_file("testdata/test.address_error.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_addressError".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(false, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::AddressError { address: 0x4321u32 } ))
+}

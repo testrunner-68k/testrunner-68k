@@ -362,6 +362,7 @@
 #define CALLBACK_SET_FC      m68ki_cpu.set_fc_callback
 #define CALLBACK_INSTR_HOOK  m68ki_cpu.instr_hook_callback
 #define CALLBACK_EXCEPTION_ILLEGAL_HOOK  m68ki_cpu.exception_illegal_hook_callback
+#define CALLBACK_EXCEPTION_ADDRESS_ERROR_HOOK  m68ki_cpu.exception_address_error_hook_callback
 
 
 
@@ -470,6 +471,16 @@
 #else
 	#define m68ki_exception_illegal_hook()
 #endif /* M68K_EXCEPTION_ILLEGAL_CALLBACK */
+
+#ifdef M68K_EXCEPTION_ADDRESS_ERROR
+	#if M68K_EXCEPTION_ADDRESS_ERROR == OPT_SPECIFY_HANDLER
+		#define m68ki_exception_address_error_hook(address) M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK(address)
+	#else
+		#define m68ki_exception_address_error_hook(address) CALLBACK_EXCEPTION_ADDRESS_ERROR_HOOK(address)
+	#endif
+#else
+	#define m68ki_exception_address_error_hook(address)
+#endif /* M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK */
 
 
 #if M68K_MONITOR_PC
@@ -864,6 +875,7 @@ typedef struct
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */
 	void (*exception_illegal_hook_callback)(void);    /* Called before taking illegal instruction exception */
+	void (*exception_address_error_hook_callback)(uint address);    /* Called before taking address error exception */
 
 } m68ki_cpu_core;
 
@@ -994,7 +1006,7 @@ INLINE void m68ki_exception_1010(void);
 INLINE void m68ki_exception_1111(void);
 void m68ki_exception_illegal(void);
 INLINE void m68ki_exception_format_error(void);
-INLINE void m68ki_exception_address_error(void);
+void m68ki_exception_address_error(void);
 INLINE void m68ki_exception_interrupt(uint int_level);
 INLINE void m68ki_check_interrupts(void);            /* ASG: check for interrupts */
 
@@ -1853,36 +1865,6 @@ INLINE void m68ki_exception_format_error(void)
 	/* Use up some clock cycles and undo the instruction's cycles */
 	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_FORMAT_ERROR] - CYC_INSTRUCTION[REG_IR]);
 }
-
-/* Exception for address error */
-INLINE void m68ki_exception_address_error(void)
-{
-	uint sr = m68ki_init_exception();
-
-	/* If we were processing a bus error, address error, or reset,
-	 * this is a catastrophic failure.
-	 * Halt the CPU
-	 */
-	if(CPU_RUN_MODE == RUN_MODE_BERR_AERR_RESET)
-	{
-m68k_read_memory_8(0x00ffff01);
-		CPU_STOPPED = STOP_LEVEL_HALT;
-		return;
-	}
-	CPU_RUN_MODE = RUN_MODE_BERR_AERR_RESET;
-
-	/* Note: This is implemented for 68000 only! */
-	m68ki_stack_frame_buserr(sr);
-
-	m68ki_jump_vector(EXCEPTION_ADDRESS_ERROR);
-
-	/* Use up some clock cycles. Note that we don't need to undo the 
-	instruction's cycles here as we've longjmp:ed directly from the
-	instruction handler without passing the part of the excecute loop
-	that deducts instruction cycles */
-	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_ADDRESS_ERROR]); 
-}
-
 
 /* Service an interrupt request and start exception processing */
 void m68ki_exception_interrupt(uint int_level)

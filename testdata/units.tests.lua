@@ -18,6 +18,12 @@ Program {
 }
 
 Program {
+	Name = "test.address_error.amiga.exe",
+	Sources = "test.address_error.amiga.s",
+	Config = { "amiga-*-*-default" },
+}
+
+Program {
 	Name = "test.test_cases.amiga.exe",
 	Sources = "test.test_cases.amiga.s",
 	Config = { "amiga-*-*-default" },
@@ -26,4 +32,5 @@ Program {
 Default "test.failed_test_case.amiga.exe"
 Default "test.successful_test_case.amiga.exe"
 Default "test.illegal_instruction.amiga.exe"
+Default "test.address_error.amiga.exe"
 Default "test.test_cases.amiga.exe"

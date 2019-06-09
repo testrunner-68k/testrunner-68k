@@ -142,3 +142,12 @@ extern fn rust_m68k_exception_illegal_hook(execution_context: *mut ExecutionCont
         RustM68KInstructionHookResult { continue_simulation: false }
     }
 }
+
+#[no_mangle]
+extern fn rust_m68k_exception_address_error_hook(execution_context: *mut ExecutionContext, address: u32) -> RustM68KInstructionHookResult {
+    unsafe {
+        (*execution_context).events.push(SimulationEvent::AddressError { address: address });
+        (*execution_context).success = Some(false);
+        RustM68KInstructionHookResult { continue_simulation: false }
+    }
+}

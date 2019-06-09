@@ -150,8 +150,14 @@ extern void m68k_exception_illegal_hook(void);
  * access a word or longword at an odd address.
  * NOTE: This is only emulated properly for 68000 mode.
  */
-#define M68K_EMULATE_ADDRESS_ERROR  OPT_OFF
+#define M68K_EMULATE_ADDRESS_ERROR  OPT_ON
 
+/* If ON, CPU will call the address error hook callback before
+ * processing an address error handler.
+ */
+#define M68K_EXCEPTION_ADDRESS_ERROR      OPT_SPECIFY_HANDLER
+#define M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK(address) m68k_exception_address_error_hook(address)
+extern void m68k_exception_address_error_hook(unsigned int address);
 
 /* Turn ON to enable logging of illegal instruction calls.
  * M68K_LOG_FILEHANDLE must be #defined to a stdio file stream.
