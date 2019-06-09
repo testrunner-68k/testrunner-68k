@@ -6,14 +6,17 @@ start
         nop
 
 test_Module1_Case1
-        nop
+        moveq   #1,d0
+        rts
 
 test_Module2_Case2
-        nop
+        moveq   #1,d0
+        rts
 
         section data,data
 
         nop
 test_Module1_Case2
-        nop
+        moveq   #1,d0
+        rts
 irrelevant_label
