@@ -15,6 +15,9 @@ extern RustM68KWriteResult rust_m68k_write_memory_16(void* execution_context, ui
 extern RustM68KWriteResult rust_m68k_write_memory_32(void* execution_context, uint32_t address, uint32_t value);
 
 extern RustM68KInstructionHookResult rust_m68k_instruction_hook(void* execution_context);
+extern RustM68KInstructionHookResult rust_m68k_exception_privilege_violation_hook(void* execution_context);
+extern RustM68KInstructionHookResult rust_m68k_exception_1010_hook(void* execution_context);
+extern RustM68KInstructionHookResult rust_m68k_exception_1111_hook(void* execution_context);
 extern RustM68KInstructionHookResult rust_m68k_exception_illegal_hook(void* execution_context);
 extern RustM68KInstructionHookResult rust_m68k_exception_address_error_hook(void* execution_context, uint32_t address, bool write, uint32_t function_code);
 
@@ -73,6 +76,27 @@ void m68k_write_memory_32(uint32_t address, uint32_t value)
 void m68k_instruction_hook()
 {
     RustM68KInstructionHookResult result = rust_m68k_instruction_hook(s_execution_context);
+    if (!result.continue_simulation)
+        longjmp(s_abort_execution, 1);
+}
+
+void m68k_exception_privilege_violation_hook()
+{
+    RustM68KInstructionHookResult result = rust_m68k_exception_privilege_violation_hook(s_execution_context);
+    if (!result.continue_simulation)
+        longjmp(s_abort_execution, 1);
+}
+
+void m68k_exception_1010_hook()
+{
+    RustM68KInstructionHookResult result = rust_m68k_exception_1010_hook(s_execution_context);
+    if (!result.continue_simulation)
+        longjmp(s_abort_execution, 1);
+}
+
+void m68k_exception_1111_hook()
+{
+    RustM68KInstructionHookResult result = rust_m68k_exception_1111_hook(s_execution_context);
     if (!result.continue_simulation)
         longjmp(s_abort_execution, 1);
 }

@@ -135,6 +135,27 @@
 #define M68K_INSTRUCTION_CALLBACK() m68k_instruction_hook()
 extern void m68k_instruction_hook(void);
 
+/* If ON, CPU will call the privilege violation hook callback before
+ * processing a privilege violation handler.
+ */
+#define M68K_EXCEPTION_PRIVILEGE_VIOLATION      OPT_SPECIFY_HANDLER
+#define M68K_EXCEPTION_PRIVILEGE_VIOLATION_CALLBACK() m68k_exception_privilege_violation_hook()
+extern void m68k_exception_privilege_violation_hook(void);
+
+/* If ON, CPU will call the line-A hook callback before
+ * processing a Line-A handler.
+ */
+#define M68K_EXCEPTION_1010      OPT_SPECIFY_HANDLER
+#define M68K_EXCEPTION_1010_CALLBACK() m68k_exception_1010_hook()
+extern void m68k_exception_1010_hook(void);
+
+/* If ON, CPU will call the Line-F hook callback before
+ * processing a line-F handler.
+ */
+#define M68K_EXCEPTION_1111      OPT_SPECIFY_HANDLER
+#define M68K_EXCEPTION_1111_CALLBACK() m68k_exception_1111_hook()
+extern void m68k_exception_1111_hook(void);
+
 /* If ON, CPU will call the illegal exception hook callback before
  * processing an illegal exception handler.
  */

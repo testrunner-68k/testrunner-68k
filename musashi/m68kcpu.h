@@ -361,6 +361,9 @@
 #define CALLBACK_PC_CHANGED  m68ki_cpu.pc_changed_callback
 #define CALLBACK_SET_FC      m68ki_cpu.set_fc_callback
 #define CALLBACK_INSTR_HOOK  m68ki_cpu.instr_hook_callback
+#define CALLBACK_EXCEPTION_PRIVILEGE_VIOLATION_HOOK  m68ki_cpu.exception_privilege_violation_hook_callback
+#define CALLBACK_EXCEPTION_1010_HOOK  m68ki_cpu.exception_1010_hook_callback
+#define CALLBACK_EXCEPTION_1111_HOOK  m68ki_cpu.exception_1111_hook_callback
 #define CALLBACK_EXCEPTION_ILLEGAL_HOOK  m68ki_cpu.exception_illegal_hook_callback
 #define CALLBACK_EXCEPTION_ADDRESS_ERROR_HOOK  m68ki_cpu.exception_address_error_hook_callback
 
@@ -462,6 +465,36 @@
 	#define m68ki_instr_hook()
 #endif /* M68K_INSTRUCTION_HOOK */
 
+#ifdef M68K_EXCEPTION_PRIVILEGE_VIOLATION
+	#if M68K_EXCEPTION_PRIVILEGE_VIOLATION == OPT_SPECIFY_HANDLER
+		#define m68ki_exception_privilege_violation_hook() M68K_EXCEPTION_PRIVILEGE_VIOLATION_CALLBACK()
+	#else
+		#define m68ki_exception_privilege_violation_hook() CALLBACK_EXCEPTION_PRIVILEGE_VIOLATION_HOOK()
+	#endif
+#else
+	#define m68ki_exception_privilege_violation_hook()
+#endif /* M68K_EXCEPTION_PRIVILEGE_VIOLATION */
+
+#ifdef M68K_EXCEPTION_1010
+	#if M68K_EXCEPTION_1010 == OPT_SPECIFY_HANDLER
+		#define m68ki_exception_1010_hook() M68K_EXCEPTION_1010_CALLBACK()
+	#else
+		#define m68ki_exception_1010_hook() CALLBACK_EXCEPTION_1010_HOOK()
+	#endif
+#else
+	#define m68ki_exception_1010_hook()
+#endif /* M68K_EXCEPTION_1010 */
+
+#ifdef M68K_EXCEPTION_1111
+	#if M68K_EXCEPTION_1111 == OPT_SPECIFY_HANDLER
+		#define m68ki_exception_1111_hook() M68K_EXCEPTION_1111_CALLBACK()
+	#else
+		#define m68ki_exception_1111_hook() CALLBACK_EXCEPTION_1111_HOOK()
+	#endif
+#else
+	#define m68ki_exception_1111_hook()
+#endif /* M68K_EXCEPTION_1111 */
+
 #ifdef M68K_EXCEPTION_ILLEGAL
 	#if M68K_EXCEPTION_ILLEGAL == OPT_SPECIFY_HANDLER
 		#define m68ki_exception_illegal_hook() M68K_EXCEPTION_ILLEGAL_CALLBACK()
@@ -470,7 +503,7 @@
 	#endif
 #else
 	#define m68ki_exception_illegal_hook()
-#endif /* M68K_EXCEPTION_ILLEGAL_CALLBACK */
+#endif /* M68K_EXCEPTION_ILLEGAL */
 
 #ifdef M68K_EXCEPTION_ADDRESS_ERROR
 	#if M68K_EXCEPTION_ADDRESS_ERROR == OPT_SPECIFY_HANDLER
@@ -480,7 +513,7 @@
 	#endif
 #else
 	#define m68ki_exception_address_error_hook(address, write_mode, function_code)
-#endif /* M68K_EXCEPTION_ADDRESS_ERROR_CALLBACK */
+#endif /* M68K_EXCEPTION_ADDRESS_ERROR */
 
 
 #if M68K_MONITOR_PC
@@ -874,6 +907,9 @@ typedef struct
 	void (*pc_changed_callback)(unsigned int new_pc); /* Called when the PC changes by a large amount */
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */
+	void (*exception_privilege_violation_hook_callback)(void);    /* Called before taking privilege violation exception */
+	void (*exception_1010_hook_callback)(void);    /* Called before taking line-A exception */
+	void (*exception_1111_hook_callback)(void);    /* Called before taking line-F exception */
 	void (*exception_illegal_hook_callback)(void);    /* Called before taking illegal instruction exception */
 	void (*exception_address_error_hook_callback)(uint address, uint write_mode, uint function_code);    /* Called before taking address error exception */
 
@@ -1802,7 +1838,11 @@ INLINE void m68ki_exception_trace(void)
 /* Exception for privilege violation */
 INLINE void m68ki_exception_privilege_violation(void)
 {
-	uint sr = m68ki_init_exception();
+	uint sr;
+	
+	m68ki_exception_privilege_violation_hook();
+
+	sr = m68ki_init_exception();
 
 	#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
 	if(CPU_TYPE_IS_000(CPU_TYPE))
@@ -1828,6 +1868,8 @@ INLINE void m68ki_exception_1010(void)
 					 m68ki_disassemble_quick(ADDRESS_68K(REG_PPC))));
 #endif
 
+	m68ki_exception_1010_hook();
+
 	sr = m68ki_init_exception();
 	m68ki_stack_frame_0000(REG_PPC, sr, EXCEPTION_1010);
 	m68ki_jump_vector(EXCEPTION_1010);
@@ -1846,6 +1888,8 @@ INLINE void m68ki_exception_1111(void)
 					 m68ki_cpu_names[CPU_TYPE], ADDRESS_68K(REG_PPC), REG_IR,
 					 m68ki_disassemble_quick(ADDRESS_68K(REG_PPC))));
 #endif
+
+	m68ki_exception_1111_hook();
 
 	sr = m68ki_init_exception();
 	m68ki_stack_frame_0000(REG_PPC, sr, EXCEPTION_1111);

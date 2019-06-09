@@ -125,6 +125,33 @@ fn run_failed_test() {
 }
 
 #[test]
+fn run_privilege_violation_test() {
+    let hunks = HunkParser::parse_file("testdata/test.privilege_violation.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_privilegeViolation".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(false, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::PrivilegeViolation))
+}
+
+#[test]
+fn run_line_a_exception_test() {
+    let hunks = HunkParser::parse_file("testdata/test.line_a_exception.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_lineAException".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(false, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::LineAException))
+}
+
+#[test]
+fn run_line_f_exception_test() {
+    let hunks = HunkParser::parse_file("testdata/test.line_f_exception.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_lineFException".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(false, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::LineFException))
+}
+
+#[test]
 fn run_illegal_instruction_test() {
     let hunks = HunkParser::parse_file("testdata/test.illegal_instruction.amiga.exe").unwrap();
     let test_case = TestCase { name: "test_TestModule_illegalInstruction".to_string() };

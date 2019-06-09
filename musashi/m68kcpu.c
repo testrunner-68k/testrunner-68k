@@ -409,6 +409,21 @@ static void default_instr_hook_callback(void)
 {
 }
 
+/* Called before taking privilege violation exception */
+static void default_exception_privilege_violation_hook_callback(void)
+{
+}
+
+/* Called before taking Line-A exception */
+static void default_exception_1010_hook_callback(void)
+{
+}
+
+/* Called before taking Line-F exception */
+static void default_exception_1111_hook_callback(void)
+{
+}
+
 /* Called before taking illegal instruction exception */
 static void default_exception_illegal_hook_callback(void)
 {
@@ -570,6 +585,21 @@ void m68k_set_fc_callback(void  (*callback)(unsigned int new_fc))
 void m68k_set_instr_hook_callback(void  (*callback)(void))
 {
 	CALLBACK_INSTR_HOOK = callback ? callback : default_instr_hook_callback;
+}
+
+void m68k_set_exception_privilege_violation_hook_callback(void  (*callback)(void))
+{
+	CALLBACK_EXCEPTION_PRIVILEGE_VIOLATION_HOOK = callback ? callback : default_exception_privilege_violation_hook_callback;
+}
+
+void m68k_set_exception_1010_hook_callback(void  (*callback)(void))
+{
+	CALLBACK_EXCEPTION_1010_HOOK = callback ? callback : default_exception_1010_hook_callback;
+}
+
+void m68k_set_exception_1111_hook_callback(void  (*callback)(void))
+{
+	CALLBACK_EXCEPTION_1111_HOOK = callback ? callback : default_exception_1111_hook_callback;
 }
 
 void m68k_set_exception_illegal_hook_callback(void  (*callback)(void))
