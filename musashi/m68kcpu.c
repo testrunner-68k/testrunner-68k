@@ -928,9 +928,11 @@ void m68ki_exception_illegal(void)
 /* Exception for address error */
 void m68ki_exception_address_error(void)
 {
-	uint sr = m68ki_init_exception();
+	uint sr;
 
 	m68ki_exception_address_error_hook(m68ki_aerr_address);
+
+	sr = m68ki_init_exception();
 
 	/* If we were processing a bus error, address error, or reset,
 	 * this is a catastrophic failure.
