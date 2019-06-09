@@ -1004,9 +1004,9 @@ INLINE void m68ki_exception_trace(void);
 INLINE void m68ki_exception_privilege_violation(void);
 INLINE void m68ki_exception_1010(void);
 INLINE void m68ki_exception_1111(void);
-void m68ki_exception_illegal(void);
+INLINE void m68ki_exception_illegal(void);
 INLINE void m68ki_exception_format_error(void);
-void m68ki_exception_address_error(void);
+INLINE void m68ki_exception_address_error(void);
 INLINE void m68ki_exception_interrupt(uint int_level);
 INLINE void m68ki_check_interrupts(void);            /* ASG: check for interrupts */
 
@@ -1855,6 +1855,33 @@ INLINE void m68ki_exception_1111(void)
 	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_1111] - CYC_INSTRUCTION[REG_IR]);
 }
 
+/* Exception for illegal instructions */
+INLINE void m68ki_exception_illegal(void)
+{
+	uint sr;
+
+	M68K_DO_LOG((M68K_LOG_FILEHANDLE "%s at %08x: illegal instruction %04x (%s)\n",
+				 m68ki_cpu_names[CPU_TYPE], ADDRESS_68K(REG_PPC), REG_IR,
+				 m68ki_disassemble_quick(ADDRESS_68K(REG_PPC))));
+
+	m68ki_exception_illegal_hook();
+
+	sr = m68ki_init_exception();
+
+	#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
+	if(CPU_TYPE_IS_000(CPU_TYPE))
+	{
+		CPU_INSTR_MODE = INSTRUCTION_NO;
+	}
+	#endif /* M68K_EMULATE_ADDRESS_ERROR */
+
+	m68ki_stack_frame_0000(REG_PPC, sr, EXCEPTION_ILLEGAL_INSTRUCTION);
+	m68ki_jump_vector(EXCEPTION_ILLEGAL_INSTRUCTION);
+
+	/* Use up some clock cycles and undo the instruction's cycles */
+	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_ILLEGAL_INSTRUCTION] - CYC_INSTRUCTION[REG_IR]);
+}
+
 /* Exception for format errror in RTE */
 INLINE void m68ki_exception_format_error(void)
 {
@@ -1864,6 +1891,39 @@ INLINE void m68ki_exception_format_error(void)
 
 	/* Use up some clock cycles and undo the instruction's cycles */
 	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_FORMAT_ERROR] - CYC_INSTRUCTION[REG_IR]);
+}
+
+/* Exception for address error */
+INLINE void m68ki_exception_address_error(void)
+{
+	uint sr;
+
+	m68ki_exception_address_error_hook(m68ki_aerr_address, m68ki_aerr_write_mode, m68ki_aerr_fc);
+
+	sr = m68ki_init_exception();
+
+	/* If we were processing a bus error, address error, or reset,
+	 * this is a catastrophic failure.
+	 * Halt the CPU
+	 */
+	if(CPU_RUN_MODE == RUN_MODE_BERR_AERR_RESET)
+	{
+m68k_read_memory_8(0x00ffff01);
+		CPU_STOPPED = STOP_LEVEL_HALT;
+		return;
+	}
+	CPU_RUN_MODE = RUN_MODE_BERR_AERR_RESET;
+
+	/* Note: This is implemented for 68000 only! */
+	m68ki_stack_frame_buserr(sr);
+
+	m68ki_jump_vector(EXCEPTION_ADDRESS_ERROR);
+
+	/* Use up some clock cycles. Note that we don't need to undo the 
+	instruction's cycles here as we've longjmp:ed directly from the
+	instruction handler without passing the part of the excecute loop
+	that deducts instruction cycles */
+	USE_CYCLES(CYC_EXCEPTION[EXCEPTION_ADDRESS_ERROR]); 
 }
 
 /* Service an interrupt request and start exception processing */
