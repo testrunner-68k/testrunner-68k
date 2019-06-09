@@ -930,9 +930,7 @@ void m68ki_exception_address_error(void)
 {
 	uint sr = m68ki_init_exception();
 
-	uint address = 0x87654321; // TODO: Provide the actual address
-
-	m68ki_exception_address_error_hook(address);
+	m68ki_exception_address_error_hook(m68ki_aerr_address);
 
 	/* If we were processing a bus error, address error, or reset,
 	 * this is a catastrophic failure.
