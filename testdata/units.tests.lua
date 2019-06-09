@@ -42,6 +42,12 @@ Program {
 }
 
 Program {
+	Name = "test.bus_error.amiga.exe",
+	Sources = "test.bus_error.amiga.s",
+	Config = { "amiga-*-*-default" },
+}
+
+Program {
 	Name = "test.test_cases.amiga.exe",
 	Sources = "test.test_cases.amiga.s",
 	Config = { "amiga-*-*-default" },
@@ -54,4 +60,5 @@ Default "test.line_a_exception.amiga.exe"
 Default "test.line_f_exception.amiga.exe"
 Default "test.illegal_instruction.amiga.exe"
 Default "test.address_error.amiga.exe"
+Default "test.bus_error.amiga.exe"
 Default "test.test_cases.amiga.exe"

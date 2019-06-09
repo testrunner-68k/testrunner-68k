@@ -168,3 +168,12 @@ fn run_address_error_test() {
     assert_eq!(false, test_result.success);
     assert_eq!(test_result.events, vec!(SimulationEvent::AddressError { address: 0x4321u32, write: false, function_code: 5 } ))
 }
+
+#[test]
+fn run_bus_error_test() {
+    let hunks = HunkParser::parse_file("testdata/test.bus_error.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_busError".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(false, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::BusError))
+}

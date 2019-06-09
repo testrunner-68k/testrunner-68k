@@ -71,7 +71,7 @@ impl Context {
 
     pub fn run(&mut self, cycles: i32) -> (bool, Vec<SimulationEvent>) {
 
-        let mut execution_context = ExecutionContext::new(&mut self.memory);
+        let mut execution_context = ExecutionContext::new(&self.memory);
 
         let _musashi_core_lock_acquired = MUSASHI_CORE_LOCK.lock();
 
