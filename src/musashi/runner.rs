@@ -68,7 +68,7 @@ fn setup_emulator_init_and_trampoline(context: &mut Context, stack_ptr: u32, pro
 
 fn run_emulator_test(context: &mut Context) -> (bool, Vec<SimulationEvent>) {
 
-    context.run(2048)
+    context.run(1024*1024)
 }
 
 pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> MusashiTestResult {
