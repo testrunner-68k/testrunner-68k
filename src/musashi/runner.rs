@@ -4,7 +4,7 @@ use amiga_hunk_parser::Hunk;
 use super::super::testcases::TestCase;
 use super::context::Context;
 use super::musashi_test_result::MusashiTestResult;
-use super::simulation_event::{OperationSize, SimulationEvent};
+use super::simulation_event::SimulationEvent;
 
 
 // Compute start address for each hunk
@@ -105,6 +105,10 @@ pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<Musa
 
 #[cfg(test)]
 use amiga_hunk_parser::HunkParser;
+
+#[cfg(test)]
+use super::simulation_event::OperationSize;
+
 
 #[test]
 fn run_successful_test() {
