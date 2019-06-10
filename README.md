@@ -1,6 +1,12 @@
 
 # Test runner for Amiga/680x0 code [![Build Status](https://travis-ci.com/Kalmalyzer/testrunner-68k.svg?branch=master)](https://travis-ci.com/Kalmalyzer/testrunner-68k)
 
+testrunner-68k is a test runner for 680x0 code: Compile/assemble your test code into an Amiga executable,
+and use testrunner-68k to run the test code. The results will be printed in an easy-to-read format.
+
+testrunner-68k includes a modified version of Musashi. It emulates a 68000 CPU. No FPU support.
+No machine-specific hardware support. No OS support.
+
 ## INSTALLATION
 
 ### Linux (Ubuntu)
@@ -18,18 +24,15 @@ sudo apt-get install testrunner-68k
 
 ## HOW TO USE
 
-* Write test code, as a number of "test_" prefixed labels/functions.
+* Write test code, as a number of "test_" prefixed labels/functions. See [the example repository](https://github.com/Kalmalyzer/testrunner-68k-example) for inspiration.
 * Assemble/compile the test code into an Amiga executable with symbols present.
 * Run the tests by doing: `testrunner-68k <executable>`
 
-## OPEN QUESTIONS
+## IDEAS FOR THE FUTURE
 
 * Logging? Printf macro + emulator hook?
 * Assertions? Printf macro + emulator hook?
 * Performance monitoring/constraints? Begin/end macro + emulator hook?
-
-## IDEAS FOR THE FUTURE
-
 * Select machine configuration - either per test-suite or per-test
 * Software environment - raw vs OS/kickstart booted
 	* stdout/stderr capture
