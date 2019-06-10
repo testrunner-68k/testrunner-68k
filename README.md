@@ -25,6 +25,8 @@ sudo apt-get install testrunner-68k
 ## HOW TO USE
 
 * Write test code, as a number of "test_" prefixed labels/functions. See [the example repository](https://github.com/Kalmalyzer/testrunner-68k-example) for inspiration.
+  * Tests are considered successful if they return with a nonzero value in D0.
+  * Unhandled exceptions result in immediate test failure.
 * Assemble/compile the test code into an Amiga executable with symbols present.
 * Run the tests by doing: `testrunner-68k <executable>`
 
