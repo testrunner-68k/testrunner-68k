@@ -77,8 +77,8 @@ matrix:
         # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
         - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
 
-        # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-        - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\vcvars64_vs2017.bat"
+        # Setup VC environment variables. We assume that VS 2019 is already installed on the machine.
+        - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\vcvars64_vs2019.bat"
 
         # Install cargo 'wix' subcommand
         # If the subcommand is already installed, uninstall first; this ensures that the latest version is used
