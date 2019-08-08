@@ -6,10 +6,10 @@ env:
     - VERSION=`[[ $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "${TRAVIS_TAG:1}" || echo "0.0.${TRAVIS_BUILD_NUMBER}"`
 
 __common: &common_build
-#  language: rust
+  language: rust
   rust: stable
   cache: cargo
-  language: cpp
+#  language: cpp
 
 stages:
   - build
