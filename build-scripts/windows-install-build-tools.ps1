@@ -3,7 +3,7 @@
 
 # Install Tundra
 if (!(Get-Command tundra2.exe -ErrorAction SilentlyContinue)) {
-    try {
+   try {
         # Fetch Tundra installer
         Invoke-WebRequest -Uri https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe -OutFile Tundra-Setup.exe -ErrorAction Stop
 
@@ -14,7 +14,9 @@ if (!(Get-Command tundra2.exe -ErrorAction SilentlyContinue)) {
         # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
         # TODO: use Update-SessionEnvironment instead of manually adding to the path
         Set-Item ENV:Path ((Get-Item ENV:Path).Value + ";C:\Program Files\Tundra 2.0\bin")
-
+    } catch {
+        # Convert statement-terminating errors to script-terminating errors
+        throw
     } finally {
         # Ensure Tundra-Setup.exe is removed at end of installation step
         if (Test-Path "Tundra-Setup.exe" -ErrorAction SilentlyContinue) {
