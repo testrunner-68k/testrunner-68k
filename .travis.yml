@@ -69,36 +69,10 @@ matrix:
       <<: *common_build
       os: windows
 
-      before_install:
-        # Fetch Tundra installer
-        - cmd.exe /C 'start /wait wget https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe'
-        # Run Tundra installer
-        - cmd.exe /C 'start /wait Tundra-Setup.exe /S'
-        # Add Tundra binary path to current install path (as the installer does not refresh the current shell's env vars)
-        - PATH="$PATH:/c/Program Files/Tundra 2.0/bin"
-
-        # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-        - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\vcvars64_vs2017.bat"
-
-        # Install cargo 'wix' subcommand
-        # If the subcommand is already installed, uninstall first; this ensures that the latest version is used
-        - if [[ -n `cargo install --list | grep "cargo-wix"` ]]; then cargo uninstall cargo-wix; fi
-        - cargo install cargo-wix
-
-        # Install .NET 3.5 Framework (needed by WiX Toolset)
-        - powershell Install-WindowsFeature Net-Framework-Core
-        # Install WiX Toolset
-        - cinst -y wixtoolset
-        # Add WiX Toolset binary path to current install path (as the installer does not refresh the current shell's env vars)
-        - source ./build-scripts/run_command_and_apply_environment_differences.sh "call build-scripts\\set_environment_vars_for_wix_3.x.bat"
-
       script:
 
-        # Allow invocation of PowerShell scripts
-        - PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
-
         # Run build script
-        - powershell build-scripts/windows-build.ps1 -Version "$VERSION"
+        - powershell -ExecutionPolicy RemoteSigned build-scripts/windows-run-travis.ps1 -Version "$VERSION"
         # If successful, this will provide files in the deploy folder, ready for deployment
 
       deploy:
