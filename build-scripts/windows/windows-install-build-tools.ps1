@@ -29,9 +29,9 @@ try {
         }
     }
 
-    # Setup VC environment variables. We assume that VS 2017 is already installed on the machine.
-    Write-Host "Ensuring that VS 2017 is installed..."
-    & $PSScriptRoot\Invoke-CmdScript.ps1 "${PSScriptRoot}\vcvars64_vs2017.bat"
+    # Setup VC environment variables. We assume that VS 2019 is already installed on the machine.
+    Write-Host "Ensuring that VS 2019 is installed..."
+    & $PSScriptRoot\Invoke-CmdScript.ps1 "${PSScriptRoot}\vcvars64_vs2019.bat"
     # Ensure Visual Studio command-line tools are available on the path
     if (!(Get-Command cl.exe -ErrorAction SilentlyContinue)) {
         throw "cl.exe not found. Please ensure Visual Studio has been correctly installed."
