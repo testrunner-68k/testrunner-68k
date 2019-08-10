@@ -46,14 +46,14 @@ sudo apt-get install testrunner-68k
 ### Requirements
 
 * Install [Tundra 2.0](https://github.com/deplinenoise/tundra)
-* Install [MSVC 2017](https://visualstudio.microsoft.com/vs/older-downloads/) (Windows) or GCC (Linux)
+* Install [MSVC 2019](https://visualstudio.microsoft.com/vs/) (Windows) or GCC (Linux)
 * Install [LLVM/Clang](http://releases.llvm.org/download.html) (Windows) or via apt-get (Linux)
 * Install [Rust](https://www.rust-lang.org/tools/install)
 
 ### Build & test
 
 Windows (Command Prompt):
-* Ensure the 64-bit `cl.exe` is available on the command line; run `build-scripts\windows\vcvars64_vs2017.bat` if necessary
+* Ensure the 64-bit `cl.exe` is available on the command line; run `build-scripts\windows\vcvars64_vs2019.bat` if necessary
 * `powershell build-scripts\windows\windows-build.ps1`
 
 Linux:
