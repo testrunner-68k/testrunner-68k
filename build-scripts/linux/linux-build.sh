@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 VERSION="$1"
 
 # Inject build ID into Cargo.toml, if it exists

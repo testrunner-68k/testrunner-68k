@@ -53,11 +53,11 @@ sudo apt-get install testrunner-68k
 ### Build & test
 
 Windows (Command Prompt):
-* Ensure the 64-bit `cl.exe` is available on the command line; run `build-scripts\vcvars64_vs2019.bat` if necessary
-* `powershell build-scripts\windows-build.ps1`
+* Ensure the 64-bit `cl.exe` is available on the command line; run `build-scripts\windows\vcvars64_vs2019.bat` if necessary
+* `powershell build-scripts\windows\windows-build.ps1`
 
 Linux:
-* `./build-scripts/linux-build.sh`
+* `./build-scripts/linux/linux-build.sh`
 
 # Legal
 
