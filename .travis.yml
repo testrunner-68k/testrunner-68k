@@ -79,52 +79,52 @@ matrix:
 
     ############ Release ############################
 
-    # - name: Release
-    #   stage: release
+    - name: Release
+      stage: release
 
-    #   language: shell
-    #   os: linux
-    #   dist: xenial
+      language: shell
+      os: linux
+      dist: xenial
 
-    #   if: (tag =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/)
+      if: (tag =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/)
 
-    #   env:
-    #   - TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID=AKIAT67P2JAB23KORCF2
-    #   # TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY
-    #   - secure: UlACxbe+pOz/7CHIuwUa5DLKlqklst4kAonwsRt0E4LaBhQgGWgO8JTubPN7OKrt0aPYPa6bGofhYI75OvRy4Dp2YMuJC35vV7wEmvu8EN9hP9TYhk7ibCby0cQIw8luCsoS5I++aUp/g0CBjtTjf9pDUWa9i8RtyTzOCJ+KEU+s9EwiF67dFobuMkqBIRpgqiXmuR5E4iukhp/QnuAUhzhOSsdSgbG64B5ZT47YWWzjt80IvA1thADXqP07IElHgufCvphi0hlMPPaKsa6ylAjTrh6tc5xa1VjdOKjcIgWuaYMLr6J6gEtXWu3TV+i5pF/lq82AtbO3o7nZFxT8gB60hGUnu5qp4x4V9YVhoxUrWrB89P7ALFYX0S3fi6O79vo5kT93/KkYKKLFitQb6INk2xtntNv/4uniYzfPGdd0Jc5pweC+wbjdcBM/GFMiOCv5DlHBGd7vCmSRMf7GQNQNVTnemAa9pEwF0NySL1xwtZYhld8RyT2hRtgL/Nth1ZFZVV00jNpejFcZmaEfsG4e80N+iJSUm+8TwLdJXPfqKBo64WC6tApIp1N8ORWCe0iXmCJboJyrIkQqJInPV5t1xn+lYDBWa/8AxVUnkg8yfUv/Na2sVBLwAlxTm6roiPhJaALbedxSuYZ5xBwSbUAc5dYlHmsNlGXA0J/QCEg=
-    #   # TESTRUNNER_68K_APT_GPG_SECRET_KEY_FILE_DECRYPTION_KEY
-    #   - secure: "fmLVKK2q1q5w1APggi+aS7Y+/RkmVUMvJTJ2RBNBUF1h09JCpn3oDlz/4QVyb7TKrxFS/B+dIHJxbF9qKKuV4wWOoA8bKmHZX4DUaFAWEDqm2KYLZVqqtonqOkigrQSIGidmRa9e8NNr4paXvBfehMf23SpI+XtyigHaTjFCMCWsqcqNZZiQQYMCICfuYj3dBi8Y5PqSrrWmOEABMilsTSvilwxDWDkaNEeoy+sdrvZhfC8VZFdIYWT15MGWxryRmGlbr1uCOyI6S8Iez+GEFVlmN6pKUvCciKhIwx2XWNNKa3b+I/KLsy87c30k7u4OTBBKkuIEy5F/4TOWQrjuLun0gCPK1Jxdg9boURe2D5x0Hy16TRgw2mibiwBEh8LNNem5j1MCqZBnvefvunXWQFNEgsupIcjW7AJxK1yVMFQLlIqDRUDXSylS962QuMe/oz85aQoFrxezrvCjkHc0zsIKewetSi4dOoZ6XJjZe9OPFmxMFyai5bSsmIfqiqZXhqtSFlyfyHIQLhNEZAYoq3DqdzSMk8p7neOAvTV1UKRS/sObNcgc6gT19YILfhRPlTyEEAsKo+LHRxwuJHXf2RwgcDbCjIrbzak9Epm1AnePzklVExaajO/WtBIeiWnaBgDwQXl26H60mh6nP1cwM/KahH/qC3e/FnpoUfEK+p0="
-    #   # TESTRUNNER_68K_APT_GPG_SECRET_KEY_PASSWORD
-    #   - secure: "Ub8Gsq0Qa7Vn21QHeUXdXOClBLnFk32W3fVCu3JTXcNkmdFqdYHS3XgrmU0WDuCXqYMVZrhq1id0DqPqZfa3xp67Fw3I29qk2fkWItJIMIvvs9r5saeStHG8GfxwUpM0gh/BTY0PSr/gvo1e86vf5lFsTy6gyhPFTcJ2K0NooEA/MCr3koapL2mXve8+zleippzjS37rS95DL+KJfEaxlEGO4ndIwLkH4o8oDjSjTspuIzIVNJVXIvykZIpcA7oRbty+ObTbIDZ8WPMcS3xCxnIIlBxtRGNiGvtwcVtniCdXB5+0bYeTm8D9cI9smG0+YZbK/QlOXBw+vcKjJZm4K2OYc5Lh97ew/L20y7r2bYnEH5GDnWAQijQmKmGF/Iv5mP04qwkgacCnbUvZ5L/T5v4F0h1XMbO/BJ5xoLsqiYac/OKTOqmCPy0D4gxRvCxAQzKGe0AEp6+m+9+tUJddIhUB7fgFlSG076p7E94b5sc+JKu4qSXeWsctZ9jXLk4h7R4RnqnooR2osy7OkGpT6Y9ZDS0SYzKJR7t561EVNl7aC5x+4SvrSqTOt4bHOOJ33S4KVx9WdlVILWYbT5cVbacXIv18fOjgUuZyEWu6zarvQHQ+efX44D3GKzjlhlU/BVq5gby6o/82revlBioVsgzNuttGM/8NV30xDBkpxIU="
+      env:
+      - TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID=AKIAT67P2JAB23KORCF2
+      # TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY
+      - secure: UlACxbe+pOz/7CHIuwUa5DLKlqklst4kAonwsRt0E4LaBhQgGWgO8JTubPN7OKrt0aPYPa6bGofhYI75OvRy4Dp2YMuJC35vV7wEmvu8EN9hP9TYhk7ibCby0cQIw8luCsoS5I++aUp/g0CBjtTjf9pDUWa9i8RtyTzOCJ+KEU+s9EwiF67dFobuMkqBIRpgqiXmuR5E4iukhp/QnuAUhzhOSsdSgbG64B5ZT47YWWzjt80IvA1thADXqP07IElHgufCvphi0hlMPPaKsa6ylAjTrh6tc5xa1VjdOKjcIgWuaYMLr6J6gEtXWu3TV+i5pF/lq82AtbO3o7nZFxT8gB60hGUnu5qp4x4V9YVhoxUrWrB89P7ALFYX0S3fi6O79vo5kT93/KkYKKLFitQb6INk2xtntNv/4uniYzfPGdd0Jc5pweC+wbjdcBM/GFMiOCv5DlHBGd7vCmSRMf7GQNQNVTnemAa9pEwF0NySL1xwtZYhld8RyT2hRtgL/Nth1ZFZVV00jNpejFcZmaEfsG4e80N+iJSUm+8TwLdJXPfqKBo64WC6tApIp1N8ORWCe0iXmCJboJyrIkQqJInPV5t1xn+lYDBWa/8AxVUnkg8yfUv/Na2sVBLwAlxTm6roiPhJaALbedxSuYZ5xBwSbUAc5dYlHmsNlGXA0J/QCEg=
+      # TESTRUNNER_68K_APT_GPG_SECRET_KEY_FILE_DECRYPTION_KEY
+      - secure: "fmLVKK2q1q5w1APggi+aS7Y+/RkmVUMvJTJ2RBNBUF1h09JCpn3oDlz/4QVyb7TKrxFS/B+dIHJxbF9qKKuV4wWOoA8bKmHZX4DUaFAWEDqm2KYLZVqqtonqOkigrQSIGidmRa9e8NNr4paXvBfehMf23SpI+XtyigHaTjFCMCWsqcqNZZiQQYMCICfuYj3dBi8Y5PqSrrWmOEABMilsTSvilwxDWDkaNEeoy+sdrvZhfC8VZFdIYWT15MGWxryRmGlbr1uCOyI6S8Iez+GEFVlmN6pKUvCciKhIwx2XWNNKa3b+I/KLsy87c30k7u4OTBBKkuIEy5F/4TOWQrjuLun0gCPK1Jxdg9boURe2D5x0Hy16TRgw2mibiwBEh8LNNem5j1MCqZBnvefvunXWQFNEgsupIcjW7AJxK1yVMFQLlIqDRUDXSylS962QuMe/oz85aQoFrxezrvCjkHc0zsIKewetSi4dOoZ6XJjZe9OPFmxMFyai5bSsmIfqiqZXhqtSFlyfyHIQLhNEZAYoq3DqdzSMk8p7neOAvTV1UKRS/sObNcgc6gT19YILfhRPlTyEEAsKo+LHRxwuJHXf2RwgcDbCjIrbzak9Epm1AnePzklVExaajO/WtBIeiWnaBgDwQXl26H60mh6nP1cwM/KahH/qC3e/FnpoUfEK+p0="
+      # TESTRUNNER_68K_APT_GPG_SECRET_KEY_PASSWORD
+      - secure: "Ub8Gsq0Qa7Vn21QHeUXdXOClBLnFk32W3fVCu3JTXcNkmdFqdYHS3XgrmU0WDuCXqYMVZrhq1id0DqPqZfa3xp67Fw3I29qk2fkWItJIMIvvs9r5saeStHG8GfxwUpM0gh/BTY0PSr/gvo1e86vf5lFsTy6gyhPFTcJ2K0NooEA/MCr3koapL2mXve8+zleippzjS37rS95DL+KJfEaxlEGO4ndIwLkH4o8oDjSjTspuIzIVNJVXIvykZIpcA7oRbty+ObTbIDZ8WPMcS3xCxnIIlBxtRGNiGvtwcVtniCdXB5+0bYeTm8D9cI9smG0+YZbK/QlOXBw+vcKjJZm4K2OYc5Lh97ew/L20y7r2bYnEH5GDnWAQijQmKmGF/Iv5mP04qwkgacCnbUvZ5L/T5v4F0h1XMbO/BJ5xoLsqiYac/OKTOqmCPy0D4gxRvCxAQzKGe0AEp6+m+9+tUJddIhUB7fgFlSG076p7E94b5sc+JKu4qSXeWsctZ9jXLk4h7R4RnqnooR2osy7OkGpT6Y9ZDS0SYzKJR7t561EVNl7aC5x+4SvrSqTOt4bHOOJ33S4KVx9WdlVILWYbT5cVbacXIv18fOjgUuZyEWu6zarvQHQ+efX44D3GKzjlhlU/BVq5gby6o/82revlBioVsgzNuttGM/8NV30xDBkpxIU="
 
-    #   before_install:
-    #     - gem install deb-s3
+      before_install:
+        - gem install deb-s3
 
-    #      # Make available the secret key used for signing APT repositories
-    #     - openssl aes-256-cbc -pass pass:${TESTRUNNER_68K_APT_GPG_SECRET_KEY_FILE_DECRYPTION_KEY} -in build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret.enc -out build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret -d
-    #     # Add secret key to gpg keyring
-    #     - gpg --import build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret
+         # Make available the secret key used for signing APT repositories
+        - openssl aes-256-cbc -pass pass:${TESTRUNNER_68K_APT_GPG_SECRET_KEY_FILE_DECRYPTION_KEY} -in build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret.enc -out build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret -d
+        # Add secret key to gpg keyring
+        - gpg --import build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret
 
-    #   script:
-    #     # Fetch all artifacts from previous build jobs
-    #     - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-${VERSION}-windows-binaries.zip
-    #     - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-${VERSION}-x86_64.msi
-    #     - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k_${VERSION}_amd64.deb
+      script:
+        # Fetch all artifacts from previous build jobs
+        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-${VERSION}-windows-binaries.zip
+        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k-${VERSION}-x86_64.msi
+        - wget https://testrunner-68k-artifacts.s3-eu-west-1.amazonaws.com/testrunner-68k_${VERSION}_amd64.deb
 
-    #     # Upload Debian package to APT repository
-    #     - deb-s3 upload --bucket=testrunner-68k-apt --s3-region=eu-west-1 --access-key-id=${TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID} --secret-access-key=${TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY} --sign=B9D21BAC --gpg-options "\-\-passphrase=${TESTRUNNER_68K_APT_GPG_SECRET_KEY_PASSWORD}" testrunner-68k_${VERSION}_amd64.deb
+        # Upload Debian package to APT repository
+        - deb-s3 upload --bucket=testrunner-68k-apt --s3-region=eu-west-1 --access-key-id=${TESTRUNNER_68K_APT_UPLOADER_ACCESS_KEY_ID} --secret-access-key=${TESTRUNNER_68K_APT_UPLOADER_SECRET_ACCESS_KEY} --sign=B9D21BAC --gpg-options "\-\-passphrase=${TESTRUNNER_68K_APT_GPG_SECRET_KEY_PASSWORD}" testrunner-68k_${VERSION}_amd64.deb
 
-    #   deploy:
-    #     skip_cleanup: true
+      deploy:
+        skip_cleanup: true
 
-    #     provider: releases
-    #     api_key:
-    #       secure: WkMMCXx/t1LdcWkyOd59akBj8TCz0ahO3CCnqv14swsO8CrE0QEWQaEYl2bQBrsJ2pnj4Z8Zx/DUZQEaDVThd0lNm4tduJuZaOU4wc5Fm/hRYFDfC36+6CkQTplJXkRVq/Gwb4F/xH8pbHn8pU6JTrfi2Peq11setrX20XaxhBkuqu9KcPrPXNzgxT8hKIUSHCHqkeb1ynUJl5mvOVIolRxpw1jgYCctJvh3Qt/QZTyDoWKtM4IAr4GWPMmD+Wa1h+z2QyDiG9fjzuiGlmhDynU/HDd7AL5yfgw1l27YMy4hNhh26zVmFXkTK0mBODXsAnPO3PrP4JF4QsVygiDFJcmkQ8WjyH3EE0YhChwcOjVSuvqIF36M6X17cZkiULLMMY9QwNuLn8BVFumH8XL6cawq1GacmYkLs4VoQi8on8hE6F3PotwflQOa5TAg5BB/rnGYAZvpZmoZ8bVhpygnxVUvWZFE5VtDPpTOAo47k/gHKcxh6hDmFw/EJ58D3T2qc7MAEoz1t0UB+9NF8tP2xRQ+h47H3mda4e/kmWnkNw8RB1x1ZBk5oEwXAmKYjWXhE0rFbNJXySPPKPP3GwZvdBbtfOH6okryX1sLqEWp+p1Me8e0F4kdpb71XopN6E+pqxruccJBxdyR5ZuBhZMiazpuaV8B1kq68epgv7K8aog=
-    #     prerelease: false
-    #     file:
-    #       - testrunner-68k-${VERSION}-windows-binaries.zip
-    #       - testrunner-68k-${VERSION}-x86_64.msi
-    #       - testrunner-68k_${VERSION}_amd64.deb
+        provider: releases
+        api_key:
+          secure: WkMMCXx/t1LdcWkyOd59akBj8TCz0ahO3CCnqv14swsO8CrE0QEWQaEYl2bQBrsJ2pnj4Z8Zx/DUZQEaDVThd0lNm4tduJuZaOU4wc5Fm/hRYFDfC36+6CkQTplJXkRVq/Gwb4F/xH8pbHn8pU6JTrfi2Peq11setrX20XaxhBkuqu9KcPrPXNzgxT8hKIUSHCHqkeb1ynUJl5mvOVIolRxpw1jgYCctJvh3Qt/QZTyDoWKtM4IAr4GWPMmD+Wa1h+z2QyDiG9fjzuiGlmhDynU/HDd7AL5yfgw1l27YMy4hNhh26zVmFXkTK0mBODXsAnPO3PrP4JF4QsVygiDFJcmkQ8WjyH3EE0YhChwcOjVSuvqIF36M6X17cZkiULLMMY9QwNuLn8BVFumH8XL6cawq1GacmYkLs4VoQi8on8hE6F3PotwflQOa5TAg5BB/rnGYAZvpZmoZ8bVhpygnxVUvWZFE5VtDPpTOAo47k/gHKcxh6hDmFw/EJ58D3T2qc7MAEoz1t0UB+9NF8tP2xRQ+h47H3mda4e/kmWnkNw8RB1x1ZBk5oEwXAmKYjWXhE0rFbNJXySPPKPP3GwZvdBbtfOH6okryX1sLqEWp+p1Me8e0F4kdpb71XopN6E+pqxruccJBxdyR5ZuBhZMiazpuaV8B1kq68epgv7K8aog=
+        prerelease: false
+        file:
+          - testrunner-68k-${VERSION}-windows-binaries.zip
+          - testrunner-68k-${VERSION}-x86_64.msi
+          - testrunner-68k_${VERSION}_amd64.deb
 
-    #     on:
-    #       tags: true
+        on:
+          tags: true
