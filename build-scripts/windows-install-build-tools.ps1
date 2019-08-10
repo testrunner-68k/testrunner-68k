@@ -9,7 +9,7 @@ try {
     try {
             # Fetch Tundra installer
             Write-Host "Downloading Tundra installer..."
-            Invoke-WebRequest -Uri https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setup.exe -OutFile Tundra-Setup.exe -ErrorAction Stop
+            Invoke-WebRequest -Uri https://github.com/deplinenoise/tundra/releases/download/v2.09/Tundra-Setupz.exe -OutFile Tundra-Setup.exe -ErrorAction Stop
 
             # Run Tundra installer
             Write-Host "Running Tundra installer..."
