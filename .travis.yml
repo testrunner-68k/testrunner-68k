@@ -72,7 +72,7 @@ matrix:
     #   script:
 
     #     # Run build script
-    #     - powershell -ExecutionPolicy RemoteSigned build-scripts/windows-run-travis.ps1 -Version "$VERSION"
+    #     - powershell -ExecutionPolicy RemoteSigned build-scripts/windows/windows-run-travis.ps1 -Version "$VERSION"
     #     # If successful, this will provide files in the deploy folder, ready for deployment
 
     #   deploy:
