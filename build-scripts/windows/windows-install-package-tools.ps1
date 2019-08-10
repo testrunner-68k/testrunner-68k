@@ -5,12 +5,13 @@ try {
     # Install cargo 'wix' subcommand
     # TODO: Check whether or not we really need to update to the latest version on Travis machines
     # If the subcommand is already installed, uninstall first; this ensures that the latest version is used
-    Write-Host "Testing whether 'cargo wix' is installed..."
-    if ((& cargo install --list) -like '*cargo-wix*') {
-        Write-Host "Uninstalling 'cargo wix'..."
-        & cargo uninstall cargo-wix
-        if ($LASTEXITCODE -ne 0) { throw "Running Cargo uninstaller for cargo-wix failed with exit code $LASTEXITCODE" }
-    }
+
+    # Write-Host "Testing whether 'cargo wix' is installed..."
+    # if ((& cargo install --list) -like '*cargo-wix*') {
+    #     Write-Host "Uninstalling 'cargo wix'..."
+    #     & cargo uninstall cargo-wix
+    #     if ($LASTEXITCODE -ne 0) { throw "Running Cargo uninstaller for cargo-wix failed with exit code $LASTEXITCODE" }
+    # }
 
     Write-Host "Testing whether 'cargo wix' is installed..."
     if (!((& cargo install --list) -like '*cargo-wix*')) {
