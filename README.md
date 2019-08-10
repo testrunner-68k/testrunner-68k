@@ -57,7 +57,7 @@ Windows (Command Prompt):
 * `powershell build-scripts\windows\windows-build.ps1`
 
 Linux:
-* `./build-scripts/linux-build.sh`
+* `./build-scripts/linux/linux-build.sh`
 
 # Legal
 

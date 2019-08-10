@@ -43,7 +43,7 @@ matrix:
 
       script:
         # Run build script
-        - ./build-scripts/linux-build.sh ${VERSION}
+        - ./build-scripts/linux/linux-build.sh ${VERSION}
         # If successful, this will provide files in the deploy folder, ready for deployment
 
       deploy:
@@ -114,9 +114,9 @@ matrix:
     #     - gem install deb-s3
 
     #      # Make available the secret key used for signing APT repositories
-    #     - openssl aes-256-cbc -pass pass:${TESTRUNNER_68K_APT_GPG_SECRET_KEY_FILE_DECRYPTION_KEY} -in build-scripts/testrunner_68k_apt_sign_key_B9D21BAC_secret.enc -out build-scripts/testrunner_68k_apt_sign_key_B9D21BAC_secret -d
+    #     - openssl aes-256-cbc -pass pass:${TESTRUNNER_68K_APT_GPG_SECRET_KEY_FILE_DECRYPTION_KEY} -in build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret.enc -out build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret -d
     #     # Add secret key to gpg keyring
-    #     - gpg --import build-scripts/testrunner_68k_apt_sign_key_B9D21BAC_secret
+    #     - gpg --import build-scripts/linux/testrunner_68k_apt_sign_key_B9D21BAC_secret
 
     #   script:
     #     # Fetch all artifacts from previous build jobs
