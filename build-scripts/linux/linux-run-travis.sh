@@ -4,5 +4,7 @@ set -e
 
 VERSION="$1"
 
-./linux-install.sh
-./linux-build.sh "$VERSION"
+SCRIPT_DIRECTORY="$(dirname $0)"
+
+${SCRIPT_DIRECTORY}/linux-install.sh
+${SCRIPT_DIRECTORY}/linux-build.sh "$VERSION"
