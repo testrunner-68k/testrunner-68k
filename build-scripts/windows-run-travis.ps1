@@ -3,11 +3,15 @@ Param(
     [Parameter(Mandatory=$false)] [String] $Version
 )
 
-# Print each line of PowerShell script before it is executed
-Set-PSDebug -Trace 1
+try {
 
-& $PSScriptRoot\Enable-Tls12.ps1
+    & $PSScriptRoot\Enable-Tls12.ps1
 
-& $PSScriptRoot\windows-install-build-tools.ps1
-& $PSScriptRoot\windows-install-package-tools.ps1
-& $PSScriptRoot\windows-build.ps1 $Version
+    & $PSScriptRoot\windows-install-build-tools.ps1
+    & $PSScriptRoot\windows-install-package-tools.ps1
+    & $PSScriptRoot\windows-build.ps1 $Version
+
+} catch {
+    # Convert statement-terminating errors to script-terminating errors
+    throw
+}
