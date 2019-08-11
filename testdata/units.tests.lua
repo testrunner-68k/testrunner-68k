@@ -53,6 +53,12 @@ Program {
 	Config = { "amiga-*-*-default" },
 }
 
+Program {
+	Name = "test.reloc32.amiga.exe",
+	Sources = "test.reloc32.amiga.s",
+	Config = { "amiga-*-*-default" },
+}
+
 Default "test.failed_test_case.amiga.exe"
 Default "test.successful_test_case.amiga.exe"
 Default "test.privilege_violation.amiga.exe"
@@ -62,3 +68,4 @@ Default "test.illegal_instruction.amiga.exe"
 Default "test.address_error.amiga.exe"
 Default "test.bus_error.amiga.exe"
 Default "test.test_cases.amiga.exe"
+Default "test.reloc32.amiga.exe"

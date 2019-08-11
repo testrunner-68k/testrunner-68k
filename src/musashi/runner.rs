@@ -1,5 +1,6 @@
 
 use amiga_hunk_parser::Hunk;
+use amiga_hunk_parser::RelocInfo32;
 
 use super::super::testcases::TestCase;
 use super::context::Context;
@@ -38,6 +39,31 @@ fn load_hunks_into_emulator_memory(context: &mut Context, hunks: &Vec<Hunk>, hun
         let hunk = &hunks[i];
         let hunk_start_address = hunk_layout[i];
         load_hunk_into_emulator_memory(context, &hunk, hunk_start_address);
+    }
+}
+
+fn apply_relocations_to_hunk(context: &mut Context, reloc_infos: &Vec<RelocInfo32>, hunk_start_address: u32, hunk_layout: &Vec<u32>) {
+    for i in 0..reloc_infos.len() {
+        let reloc_info = &reloc_infos[i];
+        let target_hunk_id = reloc_info.target;
+        let target_hunk_start_address = hunk_layout[target_hunk_id];
+        for j in 0 .. reloc_info.data.len() {
+            let hunk_relative_relocation_source_address = reloc_info.data[j];
+            let absolute_relocation_source_address = hunk_start_address + (hunk_relative_relocation_source_address as u32);
+            let original_value = context.read_memory_32(absolute_relocation_source_address);
+            let relocated_value = original_value + target_hunk_start_address;
+            context.write_memory_32(absolute_relocation_source_address, relocated_value);
+        }
+    }
+}
+
+fn apply_relocations_to_hunks(context: &mut Context, hunks: &Vec<Hunk>, hunk_layout: &Vec<u32>) {
+    for i in 0..hunks.len() {
+        let hunk = &hunks[i];
+        let hunk_start_address = hunk_layout[i];
+        if !hunk.reloc_32.is_none() {
+            apply_relocations_to_hunk(context, hunk.reloc_32.as_ref().unwrap(), hunk_start_address, hunk_layout);
+        }
     }
 }
 
@@ -86,6 +112,7 @@ pub fn run_test_case(hunks: &Vec<Hunk>, test_case: &TestCase) -> MusashiTestResu
 
     let mut context = Context::new();
     load_hunks_into_emulator_memory(&mut context, &hunks, &hunk_layout);
+    apply_relocations_to_hunks(&mut context, &hunks, &hunk_layout);
     let test_function_start = get_function_start_address(&hunks, &hunk_layout, &test_case.name);
     setup_emulator_init_and_trampoline(&mut context, stack_ptr, program_done_ptr, test_function_start);
     let (success, events) = run_emulator_test(&mut context);
@@ -126,6 +153,15 @@ fn run_failed_test() {
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
     assert_eq!(test_result.events, vec!(SimulationEvent::Failed))
+}
+
+#[test]
+fn run_relocation_test() {
+    let hunks = HunkParser::parse_file("testdata/test.reloc32.amiga.exe").unwrap();
+    let test_case = TestCase { name: "test_TestModule_reloc32".to_string() };
+    let test_result = run_test_case(&hunks, &test_case);
+    assert_eq!(true, test_result.success);
+    assert_eq!(test_result.events, vec!(SimulationEvent::Passed))
 }
 
 #[test]
