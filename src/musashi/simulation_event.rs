@@ -29,6 +29,10 @@ fn fmt_an(index: usize, value: u32) -> String {
     format!("A{} = {:08X}", index, value)
 }
 
+fn fmt_pc(value: u32) -> String {
+    format!("PC = {:08X}", value)
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum SimulationEvent {
 	Passed,
@@ -101,6 +105,12 @@ fn test_fmt_dn() {
 fn test_fmt_an() {
     assert_eq!("A3 = FEDCBA98", fmt_an(3, 0xfedcba98u32));
     assert_eq!("A0 = 00000001", fmt_an(0, 1));
+}
+
+#[test]
+fn test_fmt_pc() {
+    assert_eq!("PC = FEDCBA98", fmt_pc(0xfedcba98u32));
+    assert_eq!("PC = 00000001", fmt_pc(1));
 }
 
 #[test]
