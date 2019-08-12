@@ -34,6 +34,30 @@ fn fmt_pc(value: u32) -> String {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct Registers {
+    pub dn : Vec<u32>,
+    pub an : Vec<u32>,
+    pub pc : u32,
+    pub sr : u16
+}
+
+impl fmt::Display for Registers {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for i in 0..8 {
+            write!(f, "{}\n", fmt_dn(i, self.dn[i]))?;
+        }
+        for i in 0..8 {
+            write!(f, "{}\n", fmt_an(i, self.an[i]))?;
+        }
+
+        write!(f, "{}\n", fmt_pc(self.pc))?;
+        write!(f, "{}\n", fmt_sr(self.sr))?;
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum SimulationEvent {
 	Passed,
 	Failed,
@@ -111,6 +135,39 @@ fn test_fmt_an() {
 fn test_fmt_pc() {
     assert_eq!("PC = FEDCBA98", fmt_pc(0xfedcba98u32));
     assert_eq!("PC = 00000001", fmt_pc(1));
+}
+
+#[test]
+fn test_formatting_of_registers() {
+    let registers = Registers {
+        dn: vec!(0, 0xffffffff, 2, 3, 4, 5, 6, 7),
+        an: vec!(7, 6, 5, 4, 0x30720, 2, 1, 0),
+        pc: 0x12345,
+        sr: 0x2700
+    };
+
+    let formatted_registers = format!("{}", registers);
+
+    let expected_result = "D0 = 00000000
+D1 = FFFFFFFF
+D2 = 00000002
+D3 = 00000003
+D4 = 00000004
+D5 = 00000005
+D6 = 00000006
+D7 = 00000007
+A0 = 00000007
+A1 = 00000006
+A2 = 00000005
+A3 = 00000004
+A4 = 00030720
+A5 = 00000002
+A6 = 00000001
+A7 = 00000000
+PC = 00012345
+SR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]
+";
+    assert_eq!(expected_result, formatted_registers);
 }
 
 #[test]
