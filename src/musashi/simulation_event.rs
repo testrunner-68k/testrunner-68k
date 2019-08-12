@@ -17,6 +17,10 @@ fn fmt_sr_bitflags(sr: u16) -> String {
     format!("T={} S={} IPL={} X={} N={} Z={} V={} C={}", (sr >> 15) & 1, (sr >> 13) & 1, (sr >> 8) & 7, (sr >> 4) & 1, (sr >> 3) & 1, (sr >> 2) & 1, (sr >> 1) & 1, (sr >> 0) & 1)
 }
 
+fn fmt_sr(sr: u16) -> String {
+    format!("SR = {:04X} [{}]", sr, fmt_sr_bitflags(sr))
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum SimulationEvent {
 	Passed,
@@ -72,6 +76,11 @@ fn test_fmt_sr_bitflags() {
 
     // Test a typical value
     assert_eq!("T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x2700));
+}
+
+#[test]
+fn test_fmt_sr() {
+    assert_eq!("SR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]", fmt_sr(0x2700));
 }
 
 #[test]
