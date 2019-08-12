@@ -13,6 +13,10 @@ impl fmt::Display for OperationSize {
     }
 }
 
+fn fmt_sr_bitflags(sr: u16) -> String {
+    format!("T={} S={} IPL={} X={} N={} Z={} V={} C={}", (sr >> 15) & 1, (sr >> 13) & 1, (sr >> 8) & 7, (sr >> 4) & 1, (sr >> 3) & 1, (sr >> 2) & 1, (sr >> 1) & 1, (sr >> 0) & 1)
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum SimulationEvent {
 	Passed,
@@ -42,6 +46,32 @@ impl fmt::Display for SimulationEvent {
             SimulationEvent::Print { message } => write!(f, "{}", message.to_string()),
         }
     }
+}
+
+#[test]
+fn test_fmt_sr_bitflags() {
+    // Test individual bits
+    assert_eq!("T=1 S=0 IPL=0 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x8000));
+    assert_eq!("T=0 S=1 IPL=0 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x2000));
+    assert_eq!("T=0 S=0 IPL=0 X=1 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x0010));
+    assert_eq!("T=0 S=0 IPL=0 X=0 N=1 Z=0 V=0 C=0", fmt_sr_bitflags(0x0008));
+    assert_eq!("T=0 S=0 IPL=0 X=0 N=0 Z=1 V=0 C=0", fmt_sr_bitflags(0x0004));
+    assert_eq!("T=0 S=0 IPL=0 X=0 N=0 Z=0 V=1 C=0", fmt_sr_bitflags(0x0002));
+    assert_eq!("T=0 S=0 IPL=0 X=0 N=0 Z=0 V=0 C=1", fmt_sr_bitflags(0x0001));
+
+    // Test IPL field
+    assert_eq!("T=0 S=0 IPL=7 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x0700));
+    assert_eq!("T=0 S=0 IPL=5 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x0500));
+    assert_eq!("T=0 S=0 IPL=2 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x0200));
+
+    // Test all bits cleared
+    assert_eq!("T=0 S=0 IPL=0 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x0000));
+
+    // Test all used bits cleared, all unused bits set
+    assert_eq!("T=0 S=0 IPL=0 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x58e0));
+
+    // Test a typical value
+    assert_eq!("T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0", fmt_sr_bitflags(0x2700));
 }
 
 #[test]
