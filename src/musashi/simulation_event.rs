@@ -21,6 +21,14 @@ fn fmt_sr(sr: u16) -> String {
     format!("SR = {:04X} [{}]", sr, fmt_sr_bitflags(sr))
 }
 
+fn fmt_dn(index: usize, value: u32) -> String {
+    format!("D{} = {:08X}", index, value)
+}
+
+fn fmt_an(index: usize, value: u32) -> String {
+    format!("A{} = {:08X}", index, value)
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum SimulationEvent {
 	Passed,
@@ -81,6 +89,18 @@ fn test_fmt_sr_bitflags() {
 #[test]
 fn test_fmt_sr() {
     assert_eq!("SR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]", fmt_sr(0x2700));
+}
+
+#[test]
+fn test_fmt_dn() {
+    assert_eq!("D3 = FEDCBA98", fmt_dn(3, 0xfedcba98u32));
+    assert_eq!("D0 = 00000001", fmt_dn(0, 1));
+}
+
+#[test]
+fn test_fmt_an() {
+    assert_eq!("A3 = FEDCBA98", fmt_an(3, 0xfedcba98u32));
+    assert_eq!("A0 = 00000001", fmt_an(0, 1));
 }
 
 #[test]
