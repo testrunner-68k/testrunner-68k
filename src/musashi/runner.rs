@@ -134,7 +134,7 @@ pub fn run_test_cases(hunks: &Vec<Hunk>, test_cases: &Vec<TestCase>) -> Vec<Musa
 use amiga_hunk_parser::HunkParser;
 
 #[cfg(test)]
-use super::simulation_event::OperationSize;
+use super::simulation_event::{OperationSize, Registers};
 
 
 #[test]
@@ -143,7 +143,7 @@ fn run_successful_test() {
     let test_case = TestCase { name: "test_TestModule_successfulCase".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(true, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::Passed))
+    assert_eq!(vec!(SimulationEvent::Passed { registers: Some(Registers { dn: vec!(1, 0, 0, 0, 0, 0, 0, 0), an: vec!(0, 0, 0, 0, 0, 0, 0, 0xfffec), pc: 0xf0fff0, sr: 0x2700 }) } ), test_result.events)
 }
 
 #[test]
@@ -152,7 +152,7 @@ fn run_failed_test() {
     let test_case = TestCase { name: "test_TestModule_failedCase".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::Failed))
+    assert_eq!(vec!(SimulationEvent::Failed { registers: Some(Registers { dn: vec!(0, 0, 0, 0, 0, 0, 0, 0), an: vec!(0, 0, 0, 0, 0, 0, 0, 0xfffec), pc: 0xf0fff0, sr: 0x2704 }) } ), test_result.events)
 }
 
 #[test]
@@ -161,7 +161,7 @@ fn run_relocation_test() {
     let test_case = TestCase { name: "test_TestModule_reloc32".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(true, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::Passed))
+    assert_eq!(vec!(SimulationEvent::Passed { registers: Some(Registers { dn: vec!(1, 0, 0, 0, 0, 0, 0, 0), an: vec!(0x430, 0x438, 0, 0, 0, 0, 0, 0xfffec), pc: 0xf0fff0, sr: 0x2700 }) } ), test_result.events)
 }
 
 #[test]
@@ -170,7 +170,7 @@ fn run_privilege_violation_test() {
     let test_case = TestCase { name: "test_TestModule_privilegeViolation".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::PrivilegeViolation))
+    assert_eq!(vec!(SimulationEvent::PrivilegeViolation { registers: Some(Registers { dn: vec!(0, 0, 0, 0, 0, 0, 0, 0), an: vec!(0, 0, 0, 0, 0, 0, 0, 0), pc: 0x406, sr: 0 }) } ), test_result.events)
 }
 
 #[test]
@@ -179,7 +179,7 @@ fn run_line_a_exception_test() {
     let test_case = TestCase { name: "test_TestModule_lineAException".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::LineAException))
+    assert_eq!(vec!(SimulationEvent::LineAException { registers: Some(Registers { dn: vec!(0, 0, 0, 0, 0, 0, 0, 0), an: vec!(0, 0, 0, 0, 0, 0, 0, 0xfffec), pc: 0x402, sr: 0x2700 }) } ), test_result.events)
 }
 
 #[test]
@@ -188,7 +188,7 @@ fn run_line_f_exception_test() {
     let test_case = TestCase { name: "test_TestModule_lineFException".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::LineFException))
+    assert_eq!(vec!(SimulationEvent::LineFException { registers: Some(Registers { dn: vec!(0, 0, 0, 0, 0, 0, 0, 0), an: vec!(0, 0, 0, 0, 0, 0, 0, 0xfffec), pc: 0x402, sr: 0x2700 }) } ), test_result.events)
 }
 
 #[test]
@@ -197,7 +197,7 @@ fn run_illegal_instruction_test() {
     let test_case = TestCase { name: "test_TestModule_illegalInstruction".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::IllegalInstruction))
+    assert_eq!(vec!(SimulationEvent::IllegalInstruction { registers: Some(Registers { dn: vec!(0, 0, 0, 0, 0, 0, 0, 0), an: vec!(0, 0, 0, 0, 0, 0, 0, 0xfffec), pc: 0x402, sr: 0x2700 }) } ), test_result.events)
 }
 
 #[test]
@@ -206,7 +206,7 @@ fn run_address_error_test() {
     let test_case = TestCase { name: "test_TestModule_addressError".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::AddressError { address: 0x4321u32, write: false, function_code: 5 } ))
+    assert_eq!(vec!(SimulationEvent::AddressError { address: 0x4321, write: false, function_code: 5, registers: Some(Registers { dn: vec!(0, 0, 0, 0, 0, 0, 0, 0), an: vec!(0x4321, 0, 0, 0, 0, 0, 0, 0xfffec), pc: 0x406, sr: 0x2700 }) } ), test_result.events)
 }
 
 #[test]
@@ -215,5 +215,5 @@ fn run_bus_error_test() {
     let test_case = TestCase { name: "test_TestModule_busError".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::BusError { address: 0xf00000u32, write: false, operation_size: OperationSize::LongWord }))
+    assert_eq!(vec!(SimulationEvent::BusError { address: 0xf00000, write: false, operation_size: OperationSize::LongWord, registers: Some(Registers { dn: vec!(0, 0, 0, 0, 0, 0, 0, 0), an: vec!(0xf00000, 0, 0, 0, 0, 0, 0, 0xfffec), pc: 0x408, sr: 0x2700 }) } ), test_result.events)
 }
