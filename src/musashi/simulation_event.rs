@@ -59,31 +59,38 @@ impl fmt::Display for Registers {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum SimulationEvent {
-	Passed,
-	Failed,
-	TimedOut,
-    PrivilegeViolation,
-    LineAException,
-    LineFException,
-	IllegalInstruction,
-    AddressError { address: u32, write: bool, function_code: u32 },
-    BusError { address: u32, write: bool, operation_size: OperationSize },
-    Print { message: String },
+	Passed { registers: Option<Registers> },
+	Failed { registers: Option<Registers> },
+	TimedOut { registers: Option<Registers> },
+    PrivilegeViolation { registers: Option<Registers> },
+    LineAException { registers: Option<Registers> },
+    LineFException { registers: Option<Registers> },
+	IllegalInstruction { registers: Option<Registers> },
+    AddressError { address: u32, write: bool, function_code: u32, registers: Option<Registers> },
+    BusError { address: u32, write: bool, operation_size: OperationSize, registers: Option<Registers> },
+    Print { message: String, registers: Option<Registers> },
+}
+
+fn write_registers(f: &mut fmt::Formatter, registers: &Option<Registers>) -> fmt::Result {
+    match registers {
+        Some(registers) => write!(f, "{}", registers),
+        None => Ok(())
+    }
 }
 
 impl fmt::Display for SimulationEvent {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            SimulationEvent::Passed => write!(f, "Test passed"),
-            SimulationEvent::Failed => write!(f, "Test failed"),
-            SimulationEvent::TimedOut => write!(f, "Test timed out"),
-            SimulationEvent::PrivilegeViolation => write!(f, "Privilege violation"),
-            SimulationEvent::LineAException => write!(f, "Line-A exception"),
-            SimulationEvent::LineFException => write!(f, "Line-F exception"),
-            SimulationEvent::IllegalInstruction => write!(f, "Illegal instruction encountered"),
-            SimulationEvent::AddressError { address, write, function_code } => write!(f, "Address error encountered, access address: 0x{:x}, {}, function code: {}", address, if *write { "write" } else { "read" }, function_code),
-            SimulationEvent::BusError { address, write, operation_size } => write!(f, "Bus error encountered, access address: 0x{:x}, {}, size: {}", address, if *write { "write" } else { "read" }, *operation_size),
-            SimulationEvent::Print { message } => write!(f, "{}", message.to_string()),
+            SimulationEvent::Passed { registers } => { write!(f, "Test passed\n")?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::Failed { registers } => { write!(f, "Test failed\n")?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::TimedOut { registers } => { write!(f, "Test timed out\n")?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::PrivilegeViolation { registers } => { write!(f, "Privilege violation\n")?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::LineAException { registers } => { write!(f, "Line-A exception\n")?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::LineFException { registers } => { write!(f, "Line-F exception\n")?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::IllegalInstruction { registers } => { write!(f, "Illegal instruction encountered\n")?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::AddressError { address, write, function_code, registers } => { write!(f, "Address error encountered, access address: 0x{:x}, {}, function code: {}\n", address, if *write { "write" } else { "read" }, function_code)?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::BusError { address, write, operation_size, registers } => { write!(f, "Bus error encountered, access address: 0x{:x}, {}, size: {}\n", address, if *write { "write" } else { "read" }, *operation_size)?; write_registers(f, registers)?; Ok(()) }
+            SimulationEvent::Print { message, registers } => { write!(f, "{}\n", message.to_string())?; write_registers(f, registers)?; Ok(()) }
         }
     }
 }
@@ -172,14 +179,44 @@ SR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]
 
 #[test]
 fn test_simulation_event_to_string() {
-    assert_eq!("Test passed", format!("{}", SimulationEvent::Passed));
-    assert_eq!("Test failed", format!("{}", SimulationEvent::Failed));
-    assert_eq!("Test timed out", format!("{}", SimulationEvent::TimedOut));
-    assert_eq!("Privilege violation", format!("{}", SimulationEvent::PrivilegeViolation));
-    assert_eq!("Line-A exception", format!("{}", SimulationEvent::LineAException));
-    assert_eq!("Line-F exception", format!("{}", SimulationEvent::LineFException));
-    assert_eq!("Illegal instruction encountered", format!("{}", SimulationEvent::IllegalInstruction));
-    assert_eq!("Address error encountered, access address: 0x11337755, read, function code: 2", format!("{}", SimulationEvent::AddressError { address: 0x11337755u32, write: false, function_code: 2 } ));
-    assert_eq!("Bus error encountered, access address: 0x123456, write, size: LongWord", format!("{}", SimulationEvent::BusError { address: 0x123456u32, write: true, operation_size: OperationSize::LongWord } ));
-    assert_eq!("smurf", format!("{}", SimulationEvent::Print { message: String::from("smurf") } ));
+    let registers = Registers {
+        dn: vec!(0, 0xffffffff, 2, 3, 4, 5, 6, 7),
+        an: vec!(7, 6, 5, 4, 0x30720, 2, 1, 0),
+        pc: 0x12345,
+        sr: 0x2700
+    };
+    let formatted_registers = "D0 = 00000000
+D1 = FFFFFFFF
+D2 = 00000002
+D3 = 00000003
+D4 = 00000004
+D5 = 00000005
+D6 = 00000006
+D7 = 00000007
+A0 = 00000007
+A1 = 00000006
+A2 = 00000005
+A3 = 00000004
+A4 = 00030720
+A5 = 00000002
+A6 = 00000001
+A7 = 00000000
+PC = 00012345
+SR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]
+";
+
+    // Test printing without registers
+    assert_eq!("Test passed\n", format!("{}", SimulationEvent::Passed { registers: None }));
+
+    // Test printing with registers
+    assert_eq!(format!("Test passed\n{}", formatted_registers), format!("{}", SimulationEvent::Passed { registers: Some(registers.clone()) }));
+    assert_eq!(format!("Test failed\n{}", formatted_registers), format!("{}", SimulationEvent::Failed { registers: Some(registers.clone()) }));
+    assert_eq!(format!("Test timed out\n{}", formatted_registers), format!("{}", SimulationEvent::TimedOut { registers: Some(registers.clone()) }));
+    assert_eq!(format!("Privilege violation\n{}", formatted_registers), format!("{}", SimulationEvent::PrivilegeViolation { registers: Some(registers.clone()) }));
+    assert_eq!(format!("Line-A exception\n{}", formatted_registers), format!("{}", SimulationEvent::LineAException { registers: Some(registers.clone()) }));
+    assert_eq!(format!("Line-F exception\n{}", formatted_registers), format!("{}", SimulationEvent::LineFException { registers: Some(registers.clone()) }));
+    assert_eq!(format!("Illegal instruction encountered\n{}", formatted_registers), format!("{}", SimulationEvent::IllegalInstruction { registers: Some(registers.clone()) }));
+    assert_eq!(format!("Address error encountered, access address: 0x11337755, read, function code: 2\n{}", formatted_registers), format!("{}", SimulationEvent::AddressError { address: 0x11337755u32, write: false, function_code: 2, registers: Some(registers.clone()) } ));
+    assert_eq!(format!("Bus error encountered, access address: 0x123456, write, size: LongWord\n{}", formatted_registers), format!("{}", SimulationEvent::BusError { address: 0x123456u32, write: true, operation_size: OperationSize::LongWord, registers: Some(registers.clone()) } ));
+    assert_eq!(format!("smurf\n{}", formatted_registers), format!("{}", SimulationEvent::Print { message: String::from("smurf"), registers: Some(registers.clone()) } ));
 }

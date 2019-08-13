@@ -105,5 +105,5 @@ fn run_musashi() {
     let (success, events) = ctx.run(1024);
 
     assert_eq!(true, success);
-    assert_eq!(events, vec!(SimulationEvent::Passed));
+    assert_eq!(events, vec!(SimulationEvent::Passed { registers: None }));
 }

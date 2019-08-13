@@ -56,7 +56,7 @@ impl ExecutionContext {
             let _cycles_used = wrapped_m68k_execute(self as *mut ExecutionContext as *mut std::ffi::c_void, cycles);
 
             if self.success == None {
-                self.events.push(SimulationEvent::TimedOut);
+                self.events.push(SimulationEvent::TimedOut { registers: None });
                 self.success = Some(false);
             }
 
@@ -72,7 +72,7 @@ extern fn rust_m68k_read_memory_8(execution_context: *mut ExecutionContext, addr
         match result {
             Some(value) => RustM68KReadResult { continue_simulation: true, value: value as u32 },
             None => {
-                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::Byte });
+                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::Byte, registers: None });
                 (*execution_context).success = Some(false);
                 RustM68KReadResult { continue_simulation: false, value: 0u32 }
             }
@@ -87,7 +87,7 @@ extern fn rust_m68k_read_memory_16(execution_context: *mut ExecutionContext, add
         match result {
             Some(value) => RustM68KReadResult { continue_simulation: true, value: value as u32 },
             None => {
-                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::Word });
+                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::Word, registers: None });
                 (*execution_context).success = Some(false);
                 RustM68KReadResult { continue_simulation: false, value: 0u32 }
             }
@@ -102,7 +102,7 @@ extern fn rust_m68k_read_memory_32(execution_context: *mut ExecutionContext, add
         match result {
             Some(value) => RustM68KReadResult { continue_simulation: true, value: value as u32 },
             None => {
-                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::LongWord });
+                (*execution_context).events.push( SimulationEvent::BusError { address: address, write: false, operation_size: OperationSize::LongWord, registers: None });
                 (*execution_context).success = Some(false);
                 RustM68KReadResult { continue_simulation: false, value: 0u32 }
             }
@@ -117,7 +117,7 @@ extern fn rust_m68k_write_memory_8(execution_context: *mut ExecutionContext, add
         if result {
             RustM68KWriteResult { continue_simulation: true }
         } else {
-            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::Byte });
+            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::Byte, registers: None });
             (*execution_context).success = Some(false);
             RustM68KWriteResult { continue_simulation: false }
         }
@@ -131,7 +131,7 @@ extern fn rust_m68k_write_memory_16(execution_context: *mut ExecutionContext, ad
         if result {
             RustM68KWriteResult { continue_simulation: true }
         } else {
-            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::Word });
+            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::Word, registers: None });
             (*execution_context).success = Some(false);
             RustM68KWriteResult { continue_simulation: false }
         }
@@ -145,7 +145,7 @@ extern fn rust_m68k_write_memory_32(execution_context: *mut ExecutionContext, ad
         if result {
             RustM68KWriteResult { continue_simulation: true }
         } else {
-            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::LongWord });
+            (*execution_context).events.push( SimulationEvent::BusError { address: address, write: true, operation_size: OperationSize::LongWord, registers: None });
             (*execution_context).success = Some(false);
             RustM68KWriteResult { continue_simulation: false }
         }
@@ -160,7 +160,7 @@ extern fn rust_m68k_instruction_hook(execution_context: *mut ExecutionContext) -
         if pc == 0xf0fff0u32 {
             let d0 = m68k_get_reg(ptr::null_mut(), m68k_register_t_M68K_REG_D0);
             let success = d0 != 0;
-            (*execution_context).events.push( if success { SimulationEvent::Passed } else { SimulationEvent::Failed } );
+            (*execution_context).events.push( if success { SimulationEvent::Passed { registers: None } } else { SimulationEvent::Failed { registers: None } } );
             (*execution_context).success = Some(success);
             RustM68KInstructionHookResult { continue_simulation: false }
         } else {
@@ -172,7 +172,7 @@ extern fn rust_m68k_instruction_hook(execution_context: *mut ExecutionContext) -
 #[no_mangle]
 extern fn rust_m68k_exception_illegal_hook(execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
     unsafe {
-        (*execution_context).events.push(SimulationEvent::IllegalInstruction);
+        (*execution_context).events.push(SimulationEvent::IllegalInstruction { registers: None });
         (*execution_context).success = Some(false);
         RustM68KInstructionHookResult { continue_simulation: false }
     }
@@ -181,7 +181,7 @@ extern fn rust_m68k_exception_illegal_hook(execution_context: *mut ExecutionCont
 #[no_mangle]
 extern fn rust_m68k_exception_privilege_violation_hook(execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
     unsafe {
-        (*execution_context).events.push(SimulationEvent::PrivilegeViolation);
+        (*execution_context).events.push(SimulationEvent::PrivilegeViolation { registers: None });
         (*execution_context).success = Some(false);
         RustM68KInstructionHookResult { continue_simulation: false }
     }
@@ -190,7 +190,7 @@ extern fn rust_m68k_exception_privilege_violation_hook(execution_context: *mut E
 #[no_mangle]
 extern fn rust_m68k_exception_1010_hook(execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
     unsafe {
-        (*execution_context).events.push(SimulationEvent::LineAException);
+        (*execution_context).events.push(SimulationEvent::LineAException { registers: None });
         (*execution_context).success = Some(false);
         RustM68KInstructionHookResult { continue_simulation: false }
     }
@@ -199,7 +199,7 @@ extern fn rust_m68k_exception_1010_hook(execution_context: *mut ExecutionContext
 #[no_mangle]
 extern fn rust_m68k_exception_1111_hook(execution_context: *mut ExecutionContext) -> RustM68KInstructionHookResult {
     unsafe {
-        (*execution_context).events.push(SimulationEvent::LineFException);
+        (*execution_context).events.push(SimulationEvent::LineFException { registers: None });
         (*execution_context).success = Some(false);
         RustM68KInstructionHookResult { continue_simulation: false }
     }
@@ -208,7 +208,7 @@ extern fn rust_m68k_exception_1111_hook(execution_context: *mut ExecutionContext
 #[no_mangle]
 extern fn rust_m68k_exception_address_error_hook(execution_context: *mut ExecutionContext, address: u32, write: bool, function_code: u32) -> RustM68KInstructionHookResult {
     unsafe {
-        (*execution_context).events.push(SimulationEvent::AddressError { address: address, write: write, function_code: function_code });
+        (*execution_context).events.push(SimulationEvent::AddressError { address: address, write: write, function_code: function_code, registers: None });
         (*execution_context).success = Some(false);
         RustM68KInstructionHookResult { continue_simulation: false }
     }

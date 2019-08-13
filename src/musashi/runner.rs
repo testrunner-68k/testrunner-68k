@@ -143,7 +143,7 @@ fn run_successful_test() {
     let test_case = TestCase { name: "test_TestModule_successfulCase".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(true, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::Passed))
+    assert_eq!(test_result.events, vec!(SimulationEvent::Passed { registers: None }))
 }
 
 #[test]
@@ -152,7 +152,7 @@ fn run_failed_test() {
     let test_case = TestCase { name: "test_TestModule_failedCase".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::Failed))
+    assert_eq!(test_result.events, vec!(SimulationEvent::Failed { registers: None }))
 }
 
 #[test]
@@ -161,7 +161,7 @@ fn run_relocation_test() {
     let test_case = TestCase { name: "test_TestModule_reloc32".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(true, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::Passed))
+    assert_eq!(test_result.events, vec!(SimulationEvent::Passed { registers: None }))
 }
 
 #[test]
@@ -170,7 +170,7 @@ fn run_privilege_violation_test() {
     let test_case = TestCase { name: "test_TestModule_privilegeViolation".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::PrivilegeViolation))
+    assert_eq!(test_result.events, vec!(SimulationEvent::PrivilegeViolation { registers: None }))
 }
 
 #[test]
@@ -179,7 +179,7 @@ fn run_line_a_exception_test() {
     let test_case = TestCase { name: "test_TestModule_lineAException".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::LineAException))
+    assert_eq!(test_result.events, vec!(SimulationEvent::LineAException { registers: None }))
 }
 
 #[test]
@@ -188,7 +188,7 @@ fn run_line_f_exception_test() {
     let test_case = TestCase { name: "test_TestModule_lineFException".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::LineFException))
+    assert_eq!(test_result.events, vec!(SimulationEvent::LineFException { registers: None }))
 }
 
 #[test]
@@ -197,7 +197,7 @@ fn run_illegal_instruction_test() {
     let test_case = TestCase { name: "test_TestModule_illegalInstruction".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::IllegalInstruction))
+    assert_eq!(test_result.events, vec!(SimulationEvent::IllegalInstruction { registers: None }))
 }
 
 #[test]
@@ -206,7 +206,7 @@ fn run_address_error_test() {
     let test_case = TestCase { name: "test_TestModule_addressError".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::AddressError { address: 0x4321u32, write: false, function_code: 5 } ))
+    assert_eq!(test_result.events, vec!(SimulationEvent::AddressError { address: 0x4321u32, write: false, function_code: 5, registers: None } ))
 }
 
 #[test]
@@ -215,5 +215,5 @@ fn run_bus_error_test() {
     let test_case = TestCase { name: "test_TestModule_busError".to_string() };
     let test_result = run_test_case(&hunks, &test_case);
     assert_eq!(false, test_result.success);
-    assert_eq!(test_result.events, vec!(SimulationEvent::BusError { address: 0xf00000u32, write: false, operation_size: OperationSize::LongWord }))
+    assert_eq!(test_result.events, vec!(SimulationEvent::BusError { address: 0xf00000u32, write: false, operation_size: OperationSize::LongWord, registers: None }))
 }
