@@ -65,6 +65,24 @@ impl Context {
         unsafe {
             m68k_init();
             m68k_set_cpu_type(M68K_CPU_TYPE_68000 as u32);
+            m68k_set_reg(m68k_register_t_M68K_REG_D0, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_D1, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_D2, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_D3, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_D4, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_D5, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_D6, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_D7, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A0, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A1, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A2, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A3, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A4, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A5, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A6, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_A7, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_PC, 0);
+            m68k_set_reg(m68k_register_t_M68K_REG_SR, 0);
             m68k_get_context(self.emulation_state.as_mut_ptr() as *mut std::ffi::c_void);
         }
     }
@@ -90,6 +108,9 @@ impl Context {
     }
 }
 
+#[cfg(test)]
+use super::simulation_event::Registers;
+
 #[test]
 fn run_musashi() {
 
@@ -105,5 +126,5 @@ fn run_musashi() {
     let (success, events) = ctx.run(1024);
 
     assert_eq!(true, success);
-    assert_eq!(events, vec!(SimulationEvent::Passed { registers: None }));
+    assert_eq!(events, vec!(SimulationEvent::Passed { registers: Some(Registers { dn: vec!(5, 0, 0, 0, 0, 0, 0, 0), an: vec!(0, 0, 0, 0, 0, 0, 0, 61436), pc: 0xf0fff0, sr: 0x2700 }) } ))
 }
