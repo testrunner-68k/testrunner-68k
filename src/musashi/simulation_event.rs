@@ -42,16 +42,19 @@ pub struct Registers {
 }
 
 impl fmt::Display for Registers {
+
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Registers:\n")?;
+    
         for i in 0..8 {
-            write!(f, "{}\n", fmt_dn(i, self.dn[i]))?;
+            write!(f, "\t{}\n", fmt_dn(i, self.dn[i]))?;
         }
         for i in 0..8 {
-            write!(f, "{}\n", fmt_an(i, self.an[i]))?;
+            write!(f, "\t{}\n", fmt_an(i, self.an[i]))?;
         }
 
-        write!(f, "{}\n", fmt_pc(self.pc))?;
-        write!(f, "{}\n", fmt_sr(self.sr))?;
+        write!(f, "\t{}\n", fmt_pc(self.pc))?;
+        write!(f, "\t{}\n", fmt_sr(self.sr))?;
 
         Ok(())
     }
@@ -155,24 +158,25 @@ fn test_formatting_of_registers() {
 
     let formatted_registers = format!("{}", registers);
 
-    let expected_result = "D0 = 00000000
-D1 = FFFFFFFF
-D2 = 00000002
-D3 = 00000003
-D4 = 00000004
-D5 = 00000005
-D6 = 00000006
-D7 = 00000007
-A0 = 00000007
-A1 = 00000006
-A2 = 00000005
-A3 = 00000004
-A4 = 00030720
-A5 = 00000002
-A6 = 00000001
-A7 = 00000000
-PC = 00012345
-SR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]
+    let expected_result = "Registers:
+\tD0 = 00000000
+\tD1 = FFFFFFFF
+\tD2 = 00000002
+\tD3 = 00000003
+\tD4 = 00000004
+\tD5 = 00000005
+\tD6 = 00000006
+\tD7 = 00000007
+\tA0 = 00000007
+\tA1 = 00000006
+\tA2 = 00000005
+\tA3 = 00000004
+\tA4 = 00030720
+\tA5 = 00000002
+\tA6 = 00000001
+\tA7 = 00000000
+\tPC = 00012345
+\tSR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]
 ";
     assert_eq!(expected_result, formatted_registers);
 }
@@ -185,24 +189,25 @@ fn test_simulation_event_to_string() {
         pc: 0x12345,
         sr: 0x2700
     };
-    let formatted_registers = "D0 = 00000000
-D1 = FFFFFFFF
-D2 = 00000002
-D3 = 00000003
-D4 = 00000004
-D5 = 00000005
-D6 = 00000006
-D7 = 00000007
-A0 = 00000007
-A1 = 00000006
-A2 = 00000005
-A3 = 00000004
-A4 = 00030720
-A5 = 00000002
-A6 = 00000001
-A7 = 00000000
-PC = 00012345
-SR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]
+    let formatted_registers = "Registers:
+\tD0 = 00000000
+\tD1 = FFFFFFFF
+\tD2 = 00000002
+\tD3 = 00000003
+\tD4 = 00000004
+\tD5 = 00000005
+\tD6 = 00000006
+\tD7 = 00000007
+\tA0 = 00000007
+\tA1 = 00000006
+\tA2 = 00000005
+\tA3 = 00000004
+\tA4 = 00030720
+\tA5 = 00000002
+\tA6 = 00000001
+\tA7 = 00000000
+\tPC = 00012345
+\tSR = 2700 [T=0 S=1 IPL=7 X=0 N=0 Z=0 V=0 C=0]
 ";
 
     // Test printing without registers
