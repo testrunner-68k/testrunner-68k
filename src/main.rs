@@ -3,6 +3,8 @@ extern crate ansi_term;
 
 extern crate clap;
 
+extern crate xml;
+
 #[macro_use]
 extern crate lazy_static;
 
@@ -11,11 +13,13 @@ use clap::{App, Arg};
 use amiga_hunk_parser::HunkParser;
 
 mod amigahunk;
+mod junit_result_writer;
 mod musashi;
 mod prettyprinter;
 mod testcases;
 
 use amigahunk::get_test_cases;
+use junit_result_writer::write_test_results;
 use musashi::runner::run_test_cases;
 use musashi::musashi_test_result::musashi_test_results_to_test_results;
 use prettyprinter::pretty_print_results;
@@ -36,9 +40,16 @@ fn main() {
             .help("File with test code")
             .required(true)
             .index(1))
+        .arg(Arg::with_name("JUNIT_RESULTS_FILE")
+            .long("junit")
+            .short("j")
+            .value_name("JUnit results file")
+            .help("If specified, test results will be written in JUnit XML format to this file")
+            .takes_value(true))
         .get_matches();
 
     let source_file = matches.value_of("INPUT").unwrap();
+    let junit_results_file = matches.value_of("JUNIT_RESULTS_FILE");
 
     #[cfg(windows)]
     {
@@ -52,6 +63,9 @@ fn main() {
     let test_results = musashi_test_results_to_test_results(&musashi_test_results);
 
     pretty_print_results(&test_results);
+    if !junit_results_file.is_none() {
+        write_test_results(&test_results, junit_results_file.unwrap());
+    }
 
     std::process::exit( if successful(&test_results) { 0 } else { 1 });
 }
