@@ -1,5 +1,5 @@
 
-# Test runner for Amiga/680x0 code [![Build Status](https://travis-ci.com/Kalmalyzer/testrunner-68k.svg?branch=master)](https://travis-ci.com/Kalmalyzer/testrunner-68k)
+# Test runner for Amiga/680x0 code [![Build Status](https://api.travis-ci.com/testrunner-68k/testrunner-68k.svg?branch=master)](https://travis-ci.com/testrunner-68k/testrunner-68k)
 
 testrunner-68k is a test runner for 680x0 code: Compile/assemble your test code into an Amiga executable,
 and use testrunner-68k to run the test code. The results will be printed in an easy-to-read format.
@@ -20,11 +20,11 @@ sudo apt-get install testrunner-68k
 
 ### Windows
 
-- Download and run the latest Windows installer from [the GitHub Releases page](https://github.com/Kalmalyzer/testrunner-68k/releases)
+- Download and run the latest Windows installer from [the GitHub Releases page](https://github.com/testrunner-68k/testrunner-68k/releases)
 
 ## HOW TO USE
 
-* Write test code, as a number of "test_" prefixed labels/functions. See [the example repository](https://github.com/Kalmalyzer/testrunner-68k-example) for inspiration.
+* Write test code, as a number of "test_" prefixed labels/functions. See [the example repository](https://github.com/testrunner-68k/testrunner-68k-example) for inspiration.
   * Tests are considered successful if they return with a nonzero value in D0.
   * Unhandled exceptions result in immediate test failure.
 * Assemble/compile the test code into an Amiga executable with symbols present.
