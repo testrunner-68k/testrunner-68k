@@ -138,7 +138,7 @@
         <!--<Icon Id='ProductICO' SourceFile='wix\Product.ico'/>-->
         <!--<Property Id='ARPPRODUCTICON' Value='ProductICO' />-->
 
-        <Property Id='ARPHELPLINK' Value='https://github.com/Kalmalyzer/testrunner-68k'/>
+        <Property Id='ARPHELPLINK' Value='https://github.com/testrunner-68k/testrunner-68k'/>
         
         <UI>
             <UIRef Id='WixUI_FeatureTree'/>

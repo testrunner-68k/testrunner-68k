@@ -4,7 +4,7 @@ version = "0.0.0"
 authors = ["Mikael Kalms <mikael@kalms.org>"]
 edition = "2018"
 description = "Test runner for Motorola 680x0 code"
-homepage = "https://github.com/Kalmalyzer/testrunner-68k"
+homepage = "https://github.com/testrunner-68k/testrunner-68k"
 license = "MIT"
 
 [build-dependencies]
